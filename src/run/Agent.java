@@ -1,46 +1,51 @@
 package run;
 
-import api.GeoLocation;
+import api.*;
+import java.util.LinkedList;
 
 public class Agent
 {
-    private int id;
-    private double value;
-    private int src;
-    private int dest;
-    private double speed;
-    private GeoLocation pos;
+    public int id;
+    public double value;
+    public int src;
+    public int dest;
+    public double speed;
+    public Pokemon target;
+    public LinkedList<NodeData> path;
 
 
-    public Agent(int id, int src, int dest, double speed, GeoLocation pos)
+    public Agent(int id, int src, int dest, double speed)
     {
         this.id = id;
         this.value = 0;
         this.src = src;
         this.dest = dest;
         this.speed = speed;
-        this.pos = pos;
+        target = null;
+        path = null;
     }
 
-    public int id(){ return this.id;}
+    public void update()
+    {
+        if(target!=null && this.src == target.edge.getSrc())
+        {
+            this.value += target.value;
+            this.src = this.dest;
+            this.dest = -1;
+            this.target = null;
+            this.path = null;
+        }
+        else
+        {
+            path.removeFirst();
+            this.src = path.getFirst().getKey();
+            if(path.size() == 1)
+                this.dest = target.edge.getDest();
+            else
+                this.dest = path.get(1).getKey();
+        }
+    }
 
-    public double value(){ return this.value;}
-
-    public int src(){ return this.src;}
-
-    public int dest(){ return this.dest;}
-
-    public double speed(){ return this.speed;}
-
-    public GeoLocation pos(){ return this.pos;}
-
-    public void setSrc(int newSrc){ this.src = newSrc;}
-
-    public void setDest(int newDest){ this.dest = newDest;}
-
-    public void setPos(GeoLocation newPos){this.pos = newPos;}
-
-    public void setValue(int points){ this.value += points;}
 
 
 

@@ -33,4 +33,10 @@ public class Location implements GeoLocation
         answer = Math.sqrt(answer);
         return answer;
     }
+
+    @Override
+    public String toString()
+    {
+        return ("" + x + "," + y + "," + z);
+    }
 }

@@ -8,4 +8,5 @@ public interface GeoLocation {
     public double y();
     public double z();
     public double distance(GeoLocation g);
+    public String toString();
 }
