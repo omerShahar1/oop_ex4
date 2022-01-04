@@ -45,9 +45,5 @@ public class Agent
                 this.dest = path.get(1).getKey();
         }
     }
-
-
-
-
-
 }
+
