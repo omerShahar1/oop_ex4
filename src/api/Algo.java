@@ -1,29 +1,8 @@
 package api;
-
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 public class Algo implements DirectedWeightedGraphAlgorithms
 {
-    static class AdjListNode { //static class used in Dijkstra’s algo to store node id and one of its out edges weight
-        // (so node and the cost to move from it).
-        int vertex;
-        double weight;
-
-        public AdjListNode(int v, double w)
-        {
-            vertex = v;
-            weight = w;
-        }
-        int getVertex() { return vertex; }
-        double getWeight() { return weight; }
-    }
-
     private DirectedWeightedGraph graph;
 
     public Algo()
@@ -31,10 +10,10 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         this.graph = null;
     }
 
-
-    public Algo(String fileName)
+    public Algo(String jsonString)
     {
-        load(fileName);
+        Graph g = new Graph(jsonString);
+        init(g);
     }
 
     public Algo(DirectedWeightedGraph graph) { init(graph); }
@@ -243,56 +222,6 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         }
 
         return path;
-    }
-
-    @Override
-    public boolean save(String file)
-    {
-        JSONArray edgesArray = new JSONArray();
-        JSONArray nodesArray = new JSONArray();
-        Iterator<EdgeData> iter1 = graph.edgeIter();
-        while(iter1.hasNext())
-        {
-            EdgeData e = iter1.next();
-            JSONObject edge = new JSONObject();
-            edge.put("src", e.getSrc());
-            edge.put("w", e.getWeight());
-            edge.put("dest", e.getDest());
-            edgesArray.add(edge);
-        }
-        Iterator<NodeData> iter2 = graph.nodeIter();
-        while(iter2.hasNext())
-        {
-            JSONObject node = new JSONObject();
-            NodeData n = iter2.next();
-            String location = n.getLocation().x() + "," + n.getLocation().y() + "," + n.getLocation().z();
-            node.put("pos", location);
-            node.put("id", n.getKey());
-            nodesArray.add(node);
-        }
-        JSONObject result = new JSONObject();
-        result.put("Edges", edgesArray);
-        result.put("Nodes", nodesArray);
-
-        try (FileWriter f = new FileWriter(file))
-        {
-            f.write(result.toJSONString());
-            f.flush();
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean load(String file)
-    {
-        Graph g = new Graph(file);
-        init(g);
-        return true;
     }
 
     private List<NodeData> checkPath(HashMap<Integer, Integer> preNode, int src, int dest)

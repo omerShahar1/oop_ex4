@@ -2,10 +2,6 @@ package api;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Consumer;
@@ -46,8 +42,8 @@ public class Graph implements DirectedWeightedGraph
     }
 
 
-    public Graph(String fileName)
-    {//constructor from json file
+    public Graph(String jsonStr)
+    {//constructor from json file string
         nodes = new HashMap<>();
         edges = new HashMap<>();
         outEdges = new HashMap<>();
@@ -55,15 +51,7 @@ public class Graph implements DirectedWeightedGraph
         changes = new HashMap<>();
         MC = 0;
 
-        JSONObject j = null;
-        try
-        {
-            j = new JSONObject(new String(Files.readAllBytes(Paths.get(fileName))));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        JSONObject j = new JSONObject(jsonStr);
         JSONArray jEdges = j.getJSONArray("Edges");
         JSONArray jNodes = j.getJSONArray("Nodes");
         for(int i = 0; i < jNodes.length(); i++)
@@ -89,6 +77,7 @@ public class Graph implements DirectedWeightedGraph
             MC = 0;
         }
     }
+
 
     @Override
     public NodeData getNode(int key) { return nodes.get(key); }

@@ -72,22 +72,5 @@ public interface DirectedWeightedGraphAlgorithms {
     * the lower the better.
     * See: https://en.wikipedia.org/wiki/Travelling_salesman_problem
     */
-    List<NodeData> tsp(List<NodeData> cities);
-    /**
-     * Saves this weighted (directed) graph to the given
-     * file name - in JSON format
-     * @param file - the file name (may include a relative path).
-     * @return true - iff the file was successfully saved
-     */
-    public boolean save(String file);
-
-    /**
-     * This method loads a graph to this graph algorithm.
-     * if the file was successfully loaded - the underlying graph
-     * of this class will be changed (to the loaded one), in case the
-     * graph was not loaded the original graph should remain "as is".
-     * @param file - file name of JSON file
-     * @return true - iff the graph was successfully loaded.
-     */
-    public boolean load(String file);
+    public List<NodeData> tsp(List<NodeData> cities);
 }
