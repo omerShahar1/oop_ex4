@@ -16,5 +16,4 @@ public class Pokemon
         this.pos = pos;
     }
 
-
 }

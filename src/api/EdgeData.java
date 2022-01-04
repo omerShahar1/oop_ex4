@@ -42,4 +42,6 @@ public interface EdgeData {
 	 * @param t - the new value of the tag
 	 */
 	public void setTag(int t);
+
+
 }
