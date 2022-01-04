@@ -25,7 +25,20 @@ public class Game
 
     public void addPokemon(String jsonStr)
     {
+        JSONObject j = new JSONObject(jsonStr);
+        JSONArray pockemonArray = j.getJSONArray("Pokemons");
 
+        for(int i = 0; i < pockemonArray.length(); i++)
+        {
+            JSONObject currentPockemon = pockemonArray.getJSONObject(i).getJSONObject("Pokemon");
+            double value = currentPockemon.getDouble("value");
+            int type = currentPockemon.getInt("type");
+            String[] pos = currentPockemon.getString("pos").split(",");
+            double x = Double.parseDouble(pos[0]);
+            double y = Double.parseDouble(pos[1]);
+            double z = Double.parseDouble(pos[2]);
+            this.pokemons.add(new Pokemon(value, type,  new Location(x,y,z)));
+        }
     }
 
     public void addAgent(String jsonStr)
