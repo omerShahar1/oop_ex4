@@ -1,4 +1,4 @@
-package ex4_java_client; /**
+/**
  * @author AchiyaZigi
  * A trivial example for starting the server and running all needed commands
  */
@@ -25,8 +25,7 @@ public class StudentCode {
 
         client.start();
 
-        while (client.isRunning().equals("true"))
-        {
+        while (client.isRunning().equals("true")) {
             client.move();
             System.out.println(client.getAgents());
             System.out.println(client.timeToEnd());
@@ -35,6 +34,8 @@ public class StudentCode {
             System.out.println("enter the next dest: ");
             int next = keyboard.nextInt();
             client.chooseNextEdge("{\"agent_id\":0, \"next_node_id\": " + next + "}");
+
         }
     }
+
 }
