@@ -1,9 +1,12 @@
+package run;
+
 import api.Algo;
-import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.Location;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import run.Agent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +33,7 @@ public class Game
 
         for(int i = 0; i < pockemonArray.length(); i++)
         {
-            JSONObject currentPockemon = pockemonArray.getJSONObject(i).getJSONObject("Pokemon");
+            JSONObject currentPockemon = pockemonArray.getJSONObject(i).getJSONObject("run.Pokemon");
             double value = currentPockemon.getDouble("value");
             int type = currentPockemon.getInt("type");
             String[] pos = currentPockemon.getString("pos").split(",");
@@ -48,7 +51,7 @@ public class Game
 
         for(int i = 0; i < agentsArray.length(); i++)
         {
-            JSONObject currentAgent = agentsArray.getJSONObject(i).getJSONObject("Agent");
+            JSONObject currentAgent = agentsArray.getJSONObject(i).getJSONObject("run.Agent");
             int id = currentAgent.getInt("id");
             double value = currentAgent.getDouble("value");
             int src = currentAgent.getInt("src");

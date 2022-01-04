@@ -1,4 +1,4 @@
-/**
+package run; /**
  * @author AchiyaZigi
  * @since 0.0
  * @version 1.0
@@ -56,7 +56,7 @@ public class Client {
      * {
      *     "Agents":[
      *         {
-     *             "Agent":
+     *             "run.Agent":
      *             {
      *                 "id":0,
      *                 "value":0.0,
@@ -250,7 +250,7 @@ public class Client {
      * {
      *     "Pokemons":[
      *         {
-     *             "Pokemon":{
+     *             "run.Pokemon":{
      *                 "value":5.0,
      *                 "type":-1,
      *                 "pos":"35.197656770719604,32.10191878639921,0.0"

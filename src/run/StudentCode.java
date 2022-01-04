@@ -1,7 +1,9 @@
-/**
+package run; /**
  * @author AchiyaZigi
  * A trivial example for starting the server and running all needed commands
  */
+import run.Client;
+
 import java.io.IOException;
 import java.util.Scanner;
 
