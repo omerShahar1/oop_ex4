@@ -12,11 +12,13 @@ import run.Game;
 public class Frame extends JFrame {
 
     DirectedWeightedGraphAlgorithms algo;
+    Game game;
 
     public Frame(DirectedWeightedGraphAlgorithms algo, Game game) {
         this.algo = algo;
+        this.game = game;
 
-        this.setTitle("Zadok & Omer's Pockemon run.Game");
+        this.setTitle("Zadok & Omer's Pockemon Game");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1400, 800);
         this.getContentPane().setBackground(new Color(94, 87, 87));
@@ -24,7 +26,7 @@ public class Frame extends JFrame {
 
         ///////////////////////////////////
         // head label
-        JLabel head = new JLabel("Pockemon run.Game");
+        JLabel head = new JLabel("Pockemon Game");
         head.setFont(new Font("MV Boli", Font.PLAIN, 40));
         head.setBackground(new Color(94, 87, 87));
         head.setForeground(Color.red);
@@ -33,7 +35,7 @@ public class Frame extends JFrame {
         ///////////////////////////////////
 
 
-        Panel panel = new Panel(this.algo);
+        Panel panel = new Panel(this.algo, this.game);
         this.add(head);
         this.add(panel);
         this.setVisible(true);

@@ -26,6 +26,14 @@ public class Game
         addPokemon(pokemonStr); //init the list (arrayList) of pokemons.
     }
 
+    public HashMap<Integer, Agent> getAgents() {
+        return agents;
+    }
+
+    public ArrayList<Pokemon> getPokemons() {
+        return pokemons;
+    }
+
     public void addPokemon(String jsonStr)
     {
         JSONObject j = new JSONObject(jsonStr);

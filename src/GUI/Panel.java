@@ -1,10 +1,14 @@
 package GUI;
 
 import api.*;
+import run.Agent;
+import run.Game;
+import run.Pokemon;
 
 import javax.swing.*;
 import java.awt.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,6 +16,7 @@ import java.util.LinkedList;
 
 public class Panel extends JPanel {
     DirectedWeightedGraphAlgorithms alg;
+    Game game;
     LinkedList<GeoLocation> points = new LinkedList<GeoLocation>();
 
     Graph graph;
@@ -36,8 +41,9 @@ public class Panel extends JPanel {
     double destX;
     double destY;
 
-    public Panel(DirectedWeightedGraphAlgorithms alg) {
+    public Panel(DirectedWeightedGraphAlgorithms alg, Game game) {
         this.alg = alg;
+        this.game = game;
         this.setBackground(Color.lightGray);
         this.setPreferredSize(new Dimension(1350, 600));
 
@@ -135,7 +141,23 @@ public class Panel extends JPanel {
             g.fillPolygon(xpoints,ypoints,3);
         }
 
+        HashMap<Integer, Agent> agents = game.getAgents();
+        g.setColor(Color.orange);
+        for (Agent agent : agents.values()) {
+            GeoLocation location = agent.pos();
+            double posX = (location.x() - Xmin) * scaleX + 12;
+            double posY = (location.y() - Ymin) * scaleY + 12;
+            g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
+        }
 
+        ArrayList<Pokemon> pokemons = game.getPokemons();
+        g.setColor(Color.pink);
+        for (int i=0; i<pokemons.size(); i++) {
+            GeoLocation location = pokemons.get(i).getPos();
+            double posX = (location.x() - Xmin) * scaleX + 12;
+            double posY = (location.y() - Ymin) * scaleY + 12;
+            g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
+        }
     }
 }
 
