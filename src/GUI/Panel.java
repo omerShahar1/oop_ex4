@@ -144,7 +144,7 @@ public class Panel extends JPanel {
         HashMap<Integer, Agent> agents = game.getAgents();
         g.setColor(Color.orange);
         for (Agent agent : agents.values()) {
-            GeoLocation location = agent.pos();
+            GeoLocation location = graph.getNode(agent.src).getLocation();
             double posX = (location.x() - Xmin) * scaleX + 12;
             double posY = (location.y() - Ymin) * scaleY + 12;
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
