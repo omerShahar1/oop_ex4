@@ -98,5 +98,5 @@ public interface DirectedWeightedGraph {
 	 * @param location
 	 * @return
 	 */
-	public boolean isOnEdge(EdgeData edge, GeoLocation location);
+	public boolean isOnEdge(EdgeData edge, GeoLocation location, int type);
 }

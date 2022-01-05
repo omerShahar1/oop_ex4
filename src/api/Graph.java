@@ -310,19 +310,26 @@ public class Graph implements DirectedWeightedGraph
     }
 
     @Override
-    public boolean isOnEdge(EdgeData edge, GeoLocation location) {
-        int dest = edge.getDest();
-        int src = edge.getSrc();
-        double y2 = getNode(dest).getLocation().y();
-        double y1 = getNode(src).getLocation().y();
-        double x2 = getNode(dest).getLocation().x();
-        double x1 = getNode(src).getLocation().x();
+    public boolean isOnEdge(EdgeData edge, GeoLocation location, int type) {
+        double p2 = getNode(edge.getDest()).getLocation().y();
+        double p1 = getNode(edge.getSrc()).getLocation().y();
+        if ( ((p2 > p1) && (type > 0)) || ((p2 < p1) && (type < 0)) ) {
+            int dest = edge.getDest();
+            int src = edge.getSrc();
+            double y2 = getNode(dest).getLocation().y();
+            double y1 = getNode(src).getLocation().y();
+            double x2 = getNode(dest).getLocation().x();
+            double x1 = getNode(src).getLocation().x();
 
-        double m = (y2 - y1) / (x2 - x1);
+            double m = (y2 - y1) / (x2 - x1);
 
-        double left = location.y() - y1;
-        double right = m * (location.x()) - x1;
+            double left = location.y() - y1;
+            double right = m * (location.x()) - x1;
 
-        return  ((left - 0.001) <= right) && (right <= (left + 0.001));
+            return  ((left - 0.001) <= right) && (right <= (left + 0.001));
+        }
+
+        return false;
+
     }
 }
