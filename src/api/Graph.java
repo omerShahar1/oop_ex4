@@ -326,7 +326,7 @@ public class Graph implements DirectedWeightedGraph
             double left = location.y() - y1;
             double right = m * (location.x()) - x1;
 
-            return  ((left - 0.001) <= right) && (right <= (left + 0.001));
+            return  ((left - 0.01) <= right) && (right <= (left + 0.01));
         }
 
         return false;

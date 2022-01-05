@@ -75,7 +75,7 @@ public class Game
             while (iter.hasNext())
             {
                 EdgeData edge = iter.next();
-                if(algo.getGraph().isOnEdge(edge, p.pos, p.type))
+                if(isOnEdge(p.pos, edge, p.type))
                 {
                     p.edge = edge;
                     break;
@@ -84,33 +84,33 @@ public class Game
         }
     }
 
-//    /**
-//     * This method checks whether pokemon object is on the edge
-//     *
-//     * @param p    the location of the pokemon by coordinate
-//     * @param e    the edge that the pokemon stays on
-//     * @param type the status of the location of the pokemon (if his moving up or down)
-//     * @return true if and only if this pokemon object are in the edge
-//     */
-//    private boolean isOnEdge(GeoLocation p, EdgeData e, int type)
-//    {
-//        int src = e.getSrc();
-//        int dest = e.getDest();
-//        if (type < 0 && dest > src)
-//            return false;
-//
-//        if (type > 0 && dest < src)
-//            return false;
-//
-//        GeoLocation srcLocation = algo.getGraph().getNode(src).getLocation();
-//        GeoLocation destLocation = algo.getGraph().getNode(dest).getLocation();
-//        boolean ans = false;
-//        double dist = srcLocation.distance(destLocation);
-//        double d1 = srcLocation.distance(p) + p.distance(destLocation);
-//        if (dist > d1 - EPS2)
-//            ans = true;
-//        return ans;
-//    }
+    /**
+     * This method checks whether pokemon object is on the edge
+     *
+     * @param p    the location of the pokemon by coordinate
+     * @param e    the edge that the pokemon stays on
+     * @param type the status of the location of the pokemon (if his moving up or down)
+     * @return true if and only if this pokemon object are in the edge
+     */
+    private boolean isOnEdge(GeoLocation p, EdgeData e, int type)
+    {
+        int src = e.getSrc();
+        int dest = e.getDest();
+        if (type < 0 && dest > src)
+            return false;
+
+        if (type > 0 && dest < src)
+            return false;
+
+        GeoLocation srcLocation = algo.getGraph().getNode(src).getLocation();
+        GeoLocation destLocation = algo.getGraph().getNode(dest).getLocation();
+        boolean ans = false;
+        double dist = srcLocation.distance(destLocation);
+        double d1 = srcLocation.distance(p) + p.distance(destLocation);
+        if (dist > d1 - EPS2)
+            ans = true;
+        return ans;
+    }
 
     /**
      * calculating the closest Pokemon to an agent (with no target).
@@ -143,19 +143,30 @@ public class Game
             }
         }
 
+        if (answer == null)
+        {
+            agent.flag_stop_move = true;
+            return;
+        }
+
         agent.path = algo.shortestPath(agent.src, answer.edge.getSrc());
         agent.target = answer;
         agent.dest = agent.path.get(1).getKey();
         answer.targeted = true;
     }
 
-    public void update()
+    public boolean update()
     {
         for (Agent agent: agents.values())
         {
             if(agent.dest == -1)
                 calculate(agent);
+
+            if(agent.flag_stop_move)
+                continue;
+
             agent.update();
         }
+        return true;
     }
 }

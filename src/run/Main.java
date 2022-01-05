@@ -23,6 +23,7 @@ public class Main {
 
         Game game = new Game(agentsStr, pokemonsStr, graphStr);
 
+
         client.start();
 
         while (client.isRunning().equals("true"))
@@ -31,6 +32,7 @@ public class Main {
             {
                 client.chooseNextEdge("{\"agent_id\":" + agent.id + ", \"next_node_id\": " + agent.dest + "}");
             }
+            boolean stopGame = game.update();
 
             client.move();
             //System.out.println(client.getAgents());
