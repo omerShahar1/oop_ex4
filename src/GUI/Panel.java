@@ -153,7 +153,7 @@ public class Panel extends JPanel {
         ArrayList<Pokemon> pokemons = game.getPokemons();
         g.setColor(Color.pink);
         for (int i=0; i<pokemons.size(); i++) {
-            GeoLocation location = pokemons.get(i).getPos();
+            GeoLocation location = pokemons.get(i).pos;
             double posX = (location.x() - Xmin) * scaleX + 12;
             double posY = (location.y() - Ymin) * scaleY + 12;
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);

@@ -3,8 +3,6 @@ package run;
 import api.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import run.Agent;
-
 import java.util.*;
 
 public class Game
@@ -22,7 +20,7 @@ public class Game
 
         addAgent(agentsStr); //init the list (the hashmap) of agents
         addPokemon(pokemonStr); //init the list (arrayList) of pokemons.
-        setEdges();
+        set_edges_for_pokemon();
     }
 
     public HashMap<Integer, Agent> getAgents() {
@@ -69,7 +67,7 @@ public class Game
     }
 
 
-    private void setEdges()
+    private void set_edges_for_pokemon()
     {
         for(Pokemon p: pokemons)
         {
@@ -77,7 +75,7 @@ public class Game
             while (iter.hasNext())
             {
                 EdgeData edge = iter.next();
-                if(isOnEdge(p.pos, edge, p.type))
+                if(algo.getGraph().isOnEdge(edge, p.pos, p.type))
                 {
                     p.edge = edge;
                     break;
@@ -86,33 +84,33 @@ public class Game
         }
     }
 
-    /**
-     * This method checks whether pokemon object is on the edge
-     *
-     * @param p    the location of the pokemon by coordinate
-     * @param e    the edge that the pokemon stays on
-     * @param type the status of the location of the pokemon (if his moving up or down)
-     * @return true if and only if this pokemon object are in the edge
-     */
-    private boolean isOnEdge(GeoLocation p, EdgeData e, int type)
-    {
-        int src = e.getSrc();
-        int dest = e.getDest();
-        if (type < 0 && dest > src)
-            return false;
-
-        if (type > 0 && dest < src)
-            return false;
-
-        GeoLocation srcLocation = algo.getGraph().getNode(src).getLocation();
-        GeoLocation destLocation = algo.getGraph().getNode(dest).getLocation();
-        boolean ans = false;
-        double dist = srcLocation.distance(destLocation);
-        double d1 = srcLocation.distance(p) + p.distance(destLocation);
-        if (dist > d1 - EPS2)
-            ans = true;
-        return ans;
-    }
+//    /**
+//     * This method checks whether pokemon object is on the edge
+//     *
+//     * @param p    the location of the pokemon by coordinate
+//     * @param e    the edge that the pokemon stays on
+//     * @param type the status of the location of the pokemon (if his moving up or down)
+//     * @return true if and only if this pokemon object are in the edge
+//     */
+//    private boolean isOnEdge(GeoLocation p, EdgeData e, int type)
+//    {
+//        int src = e.getSrc();
+//        int dest = e.getDest();
+//        if (type < 0 && dest > src)
+//            return false;
+//
+//        if (type > 0 && dest < src)
+//            return false;
+//
+//        GeoLocation srcLocation = algo.getGraph().getNode(src).getLocation();
+//        GeoLocation destLocation = algo.getGraph().getNode(dest).getLocation();
+//        boolean ans = false;
+//        double dist = srcLocation.distance(destLocation);
+//        double d1 = srcLocation.distance(p) + p.distance(destLocation);
+//        if (dist > d1 - EPS2)
+//            ans = true;
+//        return ans;
+//    }
 
     /**
      * calculating the closest Pokemon to an agent (with no target).
@@ -138,8 +136,6 @@ public class Game
             }
 
             double weight = algo.shortestPathDist(agent.src, pokemon.edge.getSrc());
-            System.out.println(weight);
-            System.out.println(agent.src + ", " + agent.dest);
             if(minWeight > weight)
             {
                 minWeight = weight;

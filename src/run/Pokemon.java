@@ -18,20 +18,4 @@ public class Pokemon
         this.pos = pos;
         targeted = false;
     }
-
-    public GeoLocation getPos() {
-        return pos;
-    }
-
-    public void setPos(GeoLocation pos) {
-        this.pos = pos;
-    }
-
-    public EdgeData getEdge() {
-        return edge;
-    }
-
-    public void setEdge(EdgeData edge) {
-        this.edge = edge;
-    }
 }
