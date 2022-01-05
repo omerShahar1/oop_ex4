@@ -11,6 +11,9 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        client.login("207");
+
+
         String graphStr = client.getGraph();
         System.out.println(graphStr);
         client.addAgent("{\"id\":0}");
