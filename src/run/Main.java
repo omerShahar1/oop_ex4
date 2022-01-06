@@ -45,11 +45,6 @@ public class Main {
             }
             System.out.println(client.timeToEnd());
 
-//            Scanner keyboard = new Scanner(System.in);
-//            System.out.println("enter the next dest: ");
-//            int next = keyboard.nextInt();
-//            client.chooseNextEdge("{\"agent_id\":0, \"next_node_id\": " + next + "}");
-
         }
     }
 
