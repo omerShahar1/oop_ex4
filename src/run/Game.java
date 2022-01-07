@@ -14,7 +14,6 @@ public class Game
     public HashMap<Integer, HashMap<Integer, Double>> points; //points of every edge
     public ArrayList<Pokemon> pokemons;
     public double counterPoints; //how many points we made.
-    public double totalPoints;  //how many points the game can have.
 
     public Game(String agentsStr, String pokemonStr, String graphStr)
     {
@@ -23,7 +22,6 @@ public class Game
         this.pokemons = new ArrayList<>();
         points = new HashMap<>();
         counterPoints = 0;
-        totalPoints = 0;
 
         Iterator<NodeData> nodeIter1 = algo.getGraph().nodeIter();
         Iterator<NodeData> nodeIter2;
@@ -59,7 +57,6 @@ public class Game
             double z = Double.parseDouble(pos[2]);
             Pokemon newPokemon = new Pokemon(value, type,  new Location(x,y,z));
             this.pokemons.add(newPokemon);
-            totalPoints += newPokemon.value;
         }
     }
 
@@ -96,7 +93,7 @@ public class Game
     /**
      * This method set the edge value in all the game pokemons
      */
-    private void set_edges_for_pokemon()
+    public void set_edges_for_pokemon()
     {
         for(Pokemon pokemon: pokemons)
         {
@@ -114,9 +111,11 @@ public class Game
      */
     public void calculate(Agent agent)
     {
+        if(agent.target != null)
+            return;
+
         double minWeight = Double.MAX_VALUE;
         Pokemon answer = null;
-
         for (Pokemon pokemon : pokemons)
         {
             if(pokemon.targeted) //check if the pokemon already been targeted.
@@ -126,10 +125,10 @@ public class Game
             {
                 agent.dest = pokemon.edge.getDest();
                 agent.target = pokemon;
+                agent.path = algo.shortestPath(agent.src, pokemon.edge.getDest());
                 pokemon.targeted = true;
                 return;
             }
-
             double weight = algo.shortestPathDist(agent.src, pokemon.edge.getSrc());
             if(minWeight > weight)
             {
@@ -160,14 +159,14 @@ public class Game
             points.get(agent.src).put(agent.dest, 0.0);
             agent.pos = algo.getGraph().getNode(agent.dest).getLocation();
 
-            if(agent.src == agent.target.edge.getSrc()) //we reached the target.
+            if(agent.src == agent.target.edge.getSrc()) //we are on the target src.
             {
-                agent.src = agent.dest;
+                agent.src = agent.target.edge.getDest();
                 agent.dest = -1;
                 agent.target = null;
                 agent.path = null;
             }
-            else //we didn't reach the target yet.
+            else //we are not on the target src.
             {
                 agent.path.removeFirst();
                 agent.src = agent.path.getFirst().getKey();

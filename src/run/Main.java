@@ -1,6 +1,7 @@
 package run;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -31,37 +32,34 @@ public class Main
         System.out.println(isRunningStr);
 
         Game game = new Game(agentsStr, pokemonsStr, graphStr);
-        //String playerID = "207689621";
         boolean firstTime = true;
-        String turnData;
-        //client.login("111");
         client.start();
-        int time=Integer.parseInt(client.timeToEnd());
+        int time = Integer.parseInt(client.timeToEnd())/1000; //time in seconds
+        System.out.println("start in: " + time);
 
         while (client.isRunning().equals("true"))
         {
-            if (firstTime || Integer.parseInt(client.timeToEnd()) < time - 3000)
+            if (firstTime || Integer.parseInt(client.timeToEnd())/1000 < time - 3)
             {
+                game.pokemons = new ArrayList<>();
+                game.addPokemon(client.getPokemons());
+                game.set_edges_for_pokemon();
+                System.out.println(client.getPokemons());
+
                 firstTime = false;
-                time= Integer.parseInt(client.timeToEnd());
-                game.agentsUpdate();
                 client.move();
-            }
-            else
-                continue;
-
-
-
-            for (Agent agent: game.agents.values())
-                if (agent.dest == -1)
+                for (Agent agent: game.agents.values())
+                {
                     game.calculate(agent);
-
-            for(Agent agent: game.agents.values())
-                client.chooseNextEdge("{\"agent_id\":"+agent.id+", \"next_node_id\": "+agent.dest+"}");
-
-            System.out.println(game.counterPoints);
-            System.out.println(client.getAgents());
-
+                    System.out.println(client.getAgents());
+                    client.chooseNextEdge("{\"agent_id\":"+agent.id+", \"next_node_id\": "+agent.dest+"}");
+                    System.out.println("agent_id: "+agent.id + " src: " + agent.src + ", dest: " + agent.dest);
+                    System.out.println(client.getAgents());
+                    System.out.println();
+                }
+                time = Integer.parseInt(client.timeToEnd())/1000;
+                game.agentsUpdate();
+            }
         }
     }
 
