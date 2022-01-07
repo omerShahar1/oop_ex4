@@ -2,30 +2,67 @@ package run;
 
 import api.*;
 import java.util.LinkedList;
+import java.util.Queue;
 
-public class Agent
-{
-    public int id;
-    public double value;
-    public int src;
-    public int dest;
-    public double speed;
-    public GeoLocation pos;
-    public Pokemon target;
-    public LinkedList<NodeData> path;
+public class Agent {
+    private final int id;
+    private double value;
+    private int src;
+    private int dest;
+    private double speed;
+    private GeoLocation pos;
+    public Queue<Integer> path;
 
-
-
-    public Agent(int id, int src, int dest, double speed, GeoLocation pos)
-    {
+    public Agent(int id, int src, int dest, double speed, GeoLocation pos) {
         this.id = id;
         this.value = 0;
         this.src = src;
         this.dest = dest;
         this.speed = speed;
         this.pos = pos;
-        target = null;
-        path = null;
+        path = new LinkedList<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public int getSrc() {
+        return src;
+    }
+
+    public void setSrc(int src) {
+        this.src = src;
+    }
+
+    public int getDest() {
+        return dest;
+    }
+
+    public void setDest(int dest) {
+        this.dest = dest;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed){ this.speed = speed;}
+
+    public GeoLocation getPos() {
+        return pos;
+    }
+
+    public void setPos(GeoLocation pos) {
+        this.pos = pos;
     }
 }
 

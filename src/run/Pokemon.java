@@ -5,11 +5,11 @@ import api.GeoLocation;
 
 public class Pokemon
 {
-    public double value;
-    public int type;
-    public GeoLocation pos;
-    public EdgeData edge;
-    public boolean targeted;
+    private double value;
+    private int type;
+    private GeoLocation pos;
+    private EdgeData edge;
+    private boolean targeted;
 
     public Pokemon(double value, int type, GeoLocation pos)
     {
@@ -18,4 +18,37 @@ public class Pokemon
         this.pos = pos;
         targeted = false;
     }
+
+    public double getValue() {
+        return value;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public GeoLocation getPos() {
+        return pos;
+    }
+
+    public EdgeData getEdge() {
+        return edge;
+    }
+
+    public void setEdge(EdgeData edge) {
+        this.edge = edge;
+    }
+
+    public boolean isTargeted() {
+        return targeted;
+    }
+
+    public void setTargeted(boolean targeted) {
+        this.targeted = targeted;
+    }
+
+    public Boolean equals(Pokemon pokemon){
+        return (this.value==pokemon.getValue() && this.pos.x() == pokemon.pos.x() && this.edge.getSrc() == pokemon.edge.getSrc() && this.type==pokemon.type);
+    }
+
 }

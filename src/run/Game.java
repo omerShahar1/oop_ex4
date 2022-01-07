@@ -9,59 +9,82 @@ import java.util.*;
 
 public class Game
 {
-    public DirectedWeightedGraphAlgorithms algo;
-    public HashMap<Integer, Agent> agents;
-    public HashMap<Integer, HashMap<Integer, Double>> points; //points of every edge
-    public ArrayList<Pokemon> pokemons;
-    public double counterPoints; //how many points we made.
+    private ArrayList<Pokemon> pokemons;
+    private HashMap<Integer, Agent> agents;
+    private DirectedWeightedGraphAlgorithms algo;
+    boolean stopOrNot;
 
-    public Game(String agentsStr, String pokemonStr, String graphStr)
+    public Game()
     {
-        this.algo = new Algo(graphStr); //init the algo and the graph
+        this.algo = null;
         this.agents = new HashMap<>();
         this.pokemons = new ArrayList<>();
-        points = new HashMap<>();
-        counterPoints = 0;
-
-        Iterator<NodeData> nodeIter1 = algo.getGraph().nodeIter();
-        Iterator<NodeData> nodeIter2;
-        while (nodeIter1.hasNext())
-        {
-            NodeData node1 = nodeIter1.next();
-            points.put(node1.getKey(), new HashMap<>());
-            nodeIter2 = algo.getGraph().nodeIter();
-            while (nodeIter2.hasNext())
-            {
-                points.get(node1.getKey()).put(nodeIter2.next().getKey(), 0.0);
-            }
-        }
-
-        addAgent(agentsStr); //init the list (the hashmap) of agents
-        addPokemon(pokemonStr); //init the list (arrayList) of pokemons.
-        set_edges_for_pokemon();
+        stopOrNot = false;
     }
 
-    public void addPokemon(String jsonStr) //receive json string of the pokemons and insert them to the game
+    public DirectedWeightedGraphAlgorithms getAlgoGraph() {
+        return algo;
+    }
+
+    public ArrayList<Pokemon> getPokemons() {
+        return pokemons;
+    }
+
+    public Agent getAgent(int id)
+    {
+        return agents.get(id);
+    }
+
+
+    public void updateAgent(String jsonStr)
     {
         JSONObject j = new JSONObject(jsonStr);
-        JSONArray pockemonArray = j.getJSONArray("Pokemons");
+        JSONArray agentsArray = j.getJSONArray("Agents");
 
-        for(int i = 0; i < pockemonArray.length(); i++)
+        for(int i = 0; i < agentsArray.length(); i++)
         {
-            JSONObject currentPockemon = pockemonArray.getJSONObject(i).getJSONObject("Pokemon");
-            double value = currentPockemon.getDouble("value");
-            int type = currentPockemon.getInt("type");
-            String[] pos = currentPockemon.getString("pos").split(",");
+            JSONObject currentAgent = agentsArray.getJSONObject(i).getJSONObject("Agent");
+            int id = currentAgent.getInt("id");
+            double value = currentAgent.getDouble("value");
+            int src = currentAgent.getInt("src");
+            int dest = currentAgent.getInt("dest");
+            double speed = currentAgent.getDouble("speed");
+            String[] pos = currentAgent.getString("pos").split(",");
             double x = Double.parseDouble(pos[0]);
             double y = Double.parseDouble(pos[1]);
             double z = Double.parseDouble(pos[2]);
-            Pokemon newPokemon = new Pokemon(value, type,  new Location(x,y,z));
-            this.pokemons.add(newPokemon);
+
+            if (agents.containsKey(id))
+            {
+                Agent agent = agents.get(id);
+                agent.setDest(dest);
+                agent.setPos(new Location(x,y,z));
+                agent.setValue(value);
+                agent.setSpeed(speed);
+                agent.setSrc(src);
+            }
+            else
+            {
+                agents.put(id, new Agent(id, src, dest, speed, new Location(x,y,z)));
+            }
         }
+
+
+
     }
 
-    public void addAgent(String jsonStr) //receive json string of the agents and insert them to the game
+    public HashMap<Integer, Agent> getAgents() {
+        return agents;
+    }
+
+    public void setGraph(String jsonStr) {
+        this.algo = new Algo(jsonStr);
+    }
+
+
+    public void loadAgent(String jsonStr)
     {
+        agents.clear();
         JSONObject j = new JSONObject(jsonStr);
         JSONArray agentsArray = j.getJSONArray("Agents");
 
@@ -82,7 +105,87 @@ public class Game
     }
 
 
-    public static int updateAmountAgent(String jsonStr)
+    public void loadPokemons(String jsonStr)
+    {
+        pokemons.clear();
+        JSONObject j = new JSONObject(jsonStr);
+        JSONArray pockemonArray = j.getJSONArray("Pokemons");
+
+        for(int i = 0; i < pockemonArray.length(); i++)
+        {
+            JSONObject currentPockemon = pockemonArray.getJSONObject(i).getJSONObject("Pokemon");
+            double value = currentPockemon.getDouble("value");
+            int type = currentPockemon.getInt("type");
+            String[] pos = currentPockemon.getString("pos").split(",");
+            double x = Double.parseDouble(pos[0]);
+            double y = Double.parseDouble(pos[1]);
+            double z = Double.parseDouble(pos[2]);
+            Pokemon newPokemon = new Pokemon(value, type,  new Location(x,y,z));
+            EdgeData edge = findEdgeOfPokemon(newPokemon.getPos(), newPokemon.getType());
+            newPokemon.setEdge(edge);
+            this.pokemons.add(newPokemon);
+        }
+    }
+
+    public void updatePkemons(String json){
+        List<Pokemon> sort = new ArrayList<>();
+        try {
+            // parsing file "JSONExample.json"
+            Object obj = new JSONParser().parse(json);
+            // typecasting obj to JSONObject
+            org.json.simple.JSONObject jo = (org.json.simple.JSONObject) obj;
+            // getting Nodes
+            org.json.simple.JSONArray ja = (org.json.simple.JSONArray) jo.get("Pokemons");
+            Iterator AgentIterator = ja.iterator();
+            while (AgentIterator.hasNext()) {
+                Iterator<Map.Entry> Pokemon = ((Map) AgentIterator.next()).entrySet().iterator();
+                while (Pokemon.hasNext()) {
+                    obj = new JSONParser().parse((String) Pokemon.next().getValue().toString());
+                    jo = (org.json.simple.JSONObject) obj;
+                    int type = (int) ((long) jo.get("type"));
+                    double value = (double) jo.get("value");
+                    String s = (String) jo.get("pos");
+                    String[] pos = s.split(",");
+                    GeoLocation loc = new Location(Double.parseDouble(pos[0]), Double.parseDouble(pos[1]), Double.parseDouble(pos[2]));
+                    EdgeData edge = this.findEdgeOfPokemon(loc, type);
+                    Pokemon a = new Pokemon(value, type, loc);
+                    a.setEdge(edge);
+                    sort.add(a);
+                }
+            }
+            for (int i = this.pokemons.size()-1;i>=0;i--) {
+                boolean delete = true;
+                Pokemon old = this.pokemons.get(i);
+                for (Pokemon curr : sort) {
+                    if (old.equals(curr)) {
+                        delete = false;
+                        break;
+                    }
+                }
+                if (delete == true) {
+                    this.pokemons.remove(old);
+                }
+            }
+            for (Pokemon curr : sort){
+                boolean addornot = true;
+                for(Pokemon old: this.pokemons){
+                    if (curr.equals(old)){
+                        addornot =false;
+                    }
+                }
+                if(addornot == true) {
+                    this.pokemons.add(curr);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public int updateAmountAgent(String jsonStr)
     {
         JSONObject j = new JSONObject(jsonStr);
         JSONObject gameServer = j.getJSONObject("GameServer");
@@ -90,111 +193,18 @@ public class Game
     }
 
 
-    /**
-     * This method set the edge value in all the game pokemons
-     */
-    public void set_edges_for_pokemon()
+    public EdgeData findEdgeOfPokemon(GeoLocation pos, int type)
     {
-        for(Pokemon pokemon: pokemons)
-        {
-            EdgeData edge = findEdgeOfPokemon(pokemon.pos, pokemon.type);
-            pokemon.edge = edge;
-            points.get(edge.getSrc()).put(edge.getDest(), pokemon.value);
-        }
-    }
-
-
-    /**
-     * calculating the closest Pokemon to an agent (with no target).
-     *
-     * @param agent: the agent.
-     */
-    public void calculate(Agent agent)
-    {
-        if(agent.target != null)
-            return;
-
-        double minWeight = Double.MAX_VALUE;
-        Pokemon answer = null;
-        for (Pokemon pokemon : pokemons)
-        {
-            if(pokemon.targeted) //check if the pokemon already been targeted.
-                continue;
-
-            if(agent.src == pokemon.edge.getSrc())
-            {
-                agent.dest = pokemon.edge.getDest();
-                agent.target = pokemon;
-                agent.path = algo.shortestPath(agent.src, pokemon.edge.getDest());
-                pokemon.targeted = true;
-                return;
-            }
-            double weight = algo.shortestPathDist(agent.src, pokemon.edge.getSrc());
-            if(minWeight > weight)
-            {
-                minWeight = weight;
-                answer = pokemon;
-            }
-        }
-
-        if (answer == null)
-            return;
-
-        agent.path = algo.shortestPath(agent.src, answer.edge.getSrc());
-        agent.target = answer;
-        agent.dest = agent.path.get(1).getKey();
-        answer.targeted = true;
-    }
-
-
-    public void agentsUpdate()
-    {
-        for (Agent agent: agents.values())
-        {
-            if(agent.target == null)
-                continue;
-
-            counterPoints += (points.get(agent.src).get(agent.dest));
-            agent.value += (points.get(agent.src).get(agent.dest));
-            points.get(agent.src).put(agent.dest, 0.0);
-            agent.pos = algo.getGraph().getNode(agent.dest).getLocation();
-
-            if(agent.src == agent.target.edge.getSrc()) //we are on the target src.
-            {
-                agent.src = agent.target.edge.getDest();
-                agent.dest = -1;
-                agent.target = null;
-                agent.path = null;
-            }
-            else //we are not on the target src.
-            {
-                agent.path.removeFirst();
-                agent.src = agent.path.getFirst().getKey();
-                if(agent.path.size() == 1)
-                    agent.dest = agent.target.edge.getDest();
-                else
-                    agent.dest = agent.path.get(1).getKey();
-            }
-        }
-    }
-
-
-
-    public EdgeData findEdgeOfPokemon(GeoLocation pos, int type) {
         Iterator<EdgeData> iterator = algo.getGraph().edgeIter();
         while (iterator.hasNext())
         {
             EdgeData edge = iterator.next();
-            double distSrcDest = findDistance(algo.getGraph().getNode(edge.getSrc()).getLocation(), algo.getGraph().getNode(edge.getDest()).getLocation());
-            double distSrcPok = findDistance(algo.getGraph().getNode(edge.getSrc()).getLocation(), pos);
-            double distDestPok = findDistance(algo.getGraph().getNode(edge.getDest()).getLocation(), pos);
+            double distSrcDest = distanceBetween2Points(algo.getGraph().getNode(edge.getSrc()).getLocation(), algo.getGraph().getNode(edge.getDest()).getLocation());
+            double distSrcPok = distanceBetween2Points(algo.getGraph().getNode(edge.getSrc()).getLocation(), pos);
+            double distDestPok = distanceBetween2Points(algo.getGraph().getNode(edge.getDest()).getLocation(), pos);
             if (Math.abs(distSrcDest - (distDestPok + distSrcPok)) < 0.000001)
             {
-                if (type < 0 && edge.getSrc() > edge.getDest())
-                {
-                    return edge;
-                }
-                else if (type > 0 && edge.getDest() > edge.getSrc())
+                if ((type < 0 && edge.getSrc() > edge.getDest()) || (type > 0 && edge.getDest() > edge.getSrc()))
                 {
                     return edge;
                 }
@@ -203,10 +213,56 @@ public class Game
         return null;
     }
 
-
-    public Double findDistance(GeoLocation a, GeoLocation b)
-    {
+    public Double distanceBetween2Points(GeoLocation a, GeoLocation b) {
         return Math.sqrt(Math.pow((a.x() - b.x()), 2) + Math.pow((a.y() - b.y()), 2));
     }
 
+    public int whichAgent(Pokemon pokemon)
+    {
+        int bestAgent = -1;
+        double minTime = Integer.MAX_VALUE;
+        for (int i = 0; i < agents.size(); i++)
+        {
+            if (agents.get(i).path.isEmpty())
+            {
+                if (timeToPokemon(pokemon, agents.get(i)) < minTime)
+                {
+                    minTime = timeToPokemon(pokemon, agents.get(i));
+                    bestAgent = i;
+                }
+            }
+        }
+        return bestAgent;
+    }
+
+    public double timeToPokemon(Pokemon pokemon, Agent agent)
+    {
+        int srcA = agent.getSrc();
+        int srcP= pokemon.getEdge().getSrc();
+        double speedA= agent.getSpeed();
+        double weight = algo.shortestPathDist(srcA,srcP);
+        return (weight/speedA);
+    }
+
+    public void addToAgentPath(int agentId, Pokemon pokemon)
+    {
+        if(agents.get(agentId).getSrc() == pokemon.getEdge().getSrc())
+        {
+            agents.get(agentId).path.add(agents.get(agentId).getSrc());
+            agents.get(agentId).path.add(pokemon.getEdge().getSrc());
+            return;
+        }
+        LinkedList<NodeData> path = algo.shortestPath(agents.get(agentId).getSrc(), pokemon.getEdge().getSrc());
+        for (NodeData node: path)
+        {
+            agents.get(agentId).path.add(node.getKey());
+        }
+        agents.get(agentId).path.add(pokemon.getEdge().getDest());
+    }
+
+
+    public void setStop(boolean ans){
+        this.stopOrNot=ans;
+    }
 }
+

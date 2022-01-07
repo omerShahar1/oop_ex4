@@ -180,4 +180,80 @@ public class Algo implements DirectedWeightedGraphAlgorithms
                     stack.push(i);
         }
     }
+
+
+    @Override
+    public NodeData center()
+    {
+        HashMap<Integer, ArrayList<AdjListNode>> ew = new HashMap<>(); //save all the edges weights
+
+        Iterator<NodeData> nodeIter = graph.nodeIter();
+        while (nodeIter.hasNext())
+            ew.put(nodeIter.next().getKey(), new ArrayList<>());
+
+        Iterator<EdgeData> edgeIter = graph.edgeIter();
+        while (edgeIter.hasNext())
+        {
+            EdgeData edge = edgeIter.next();
+            ew.get(edge.getSrc()).add(new AdjListNode(edge.getDest(), edge.getWeight()));
+        }
+
+        int id=0; //represent the center node id.
+        double lowestWeight= Double.MAX_VALUE;
+        Iterator<NodeData> nodesIter = graph.nodeIter();
+        while (nodesIter.hasNext())
+        { //go over all the nodes and find the lowest value.
+            NodeData node = nodesIter.next();
+            double newWeight = dijkstra(node.getKey(), ew);
+            if(newWeight == -1)
+                return null;
+            if (lowestWeight > newWeight)
+            {
+                id = node.getKey();
+                lowestWeight = newWeight;
+            }
+        }
+        return graph.getNode(id);
+    }
+
+    private double dijkstra(int src, HashMap<Integer, ArrayList<AdjListNode>> ew)
+    {
+        // the function is for the center algorithm. its build like the previous versions but here we
+        // will return the highest result instead of result for a given destination value.
+
+        HashMap<Integer, Double> dist = new HashMap<>();
+        Iterator<NodeData> nodeIter = graph.nodeIter();
+        while (nodeIter.hasNext())
+        {
+            NodeData node = nodeIter.next();
+            dist.put(node.getKey(), Double.MAX_VALUE);
+        }
+        dist.put(src, 0.0);
+
+        PriorityQueue<AdjListNode> pq = new PriorityQueue<>(Comparator.comparingDouble(AdjListNode::getWeight));
+        pq.add(new AdjListNode(src, 0.0));
+
+        while (pq.size() > 0)
+        {
+            AdjListNode current = pq.poll();
+            for (AdjListNode n : ew.get(current.getVertex()))
+            {
+                if (dist.get(current.vertex) + n.weight < dist.get(n.vertex))
+                {
+                    dist.put(n.vertex, n.weight + dist.get(current.vertex));
+                    pq.add(new AdjListNode(n.getVertex(), dist.get(n.vertex)));
+                }
+            }
+        }
+        double max = -1;
+        for (Double weight: dist.values()) //check for the max distance value.
+        {
+            if(weight > max)
+                max = weight;
+            if(weight == Double.MAX_VALUE) //represent that the graph is not connected. so we will return -1 because
+                // all nodes id are positive integers.
+                return -1;
+        }
+        return max;
+    }
 }

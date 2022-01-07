@@ -141,19 +141,19 @@ public class Panel extends JPanel {
             g.fillPolygon(xpoints,ypoints,3);
         }
 
-        HashMap<Integer, Agent> agents = game.agents;
+        HashMap<Integer, Agent> agents = game.getAgents();
         g.setColor(Color.orange);
         for (Agent agent : agents.values()) {
-            GeoLocation location = graph.getNode(agent.src).getLocation();
+            GeoLocation location = graph.getNode(agent.getSrc()).getLocation();
             double posX = (location.x() - Xmin) * scaleX + 12;
             double posY = (location.y() - Ymin) * scaleY + 12;
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
         }
 
-        ArrayList<Pokemon> pokemons = game.pokemons;
+        ArrayList<Pokemon> pokemons = game.getPokemons();
         g.setColor(Color.pink);
         for (int i=0; i<pokemons.size(); i++) {
-            GeoLocation location = pokemons.get(i).pos;
+            GeoLocation location = pokemons.get(i).getPos();
             double posX = (location.x() - Xmin) * scaleX + 12;
             double posY = (location.y() - Ymin) * scaleY + 12;
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);

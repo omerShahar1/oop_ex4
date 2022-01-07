@@ -60,4 +60,12 @@ public interface DirectedWeightedGraphAlgorithms {
      * @return
      */
     public LinkedList<NodeData> shortestPath(int src, int dest); //דייקסטרה
+
+
+    /**
+     * Finds the NodeData which minimizes the max distance to all the other nodes.
+     * Assuming the graph isConnected, elese return null. See: https://en.wikipedia.org/wiki/Graph_center
+     * @return the Node data to which the max shortest path to all the other nodes is minimized.
+     */
+    public NodeData center(); //שריפת עלים
 }
