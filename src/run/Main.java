@@ -2,48 +2,65 @@ package run;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
-public class Main {
-    public static void main(String[] args) {
+public class Main
+{
+    public static void main(String[] args)
+    {
         Client client = new Client();
         try {
             client.startConnection("127.0.0.1", 6666);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        client.login("207");
 
-
-        String graphStr = client.getGraph();
+        String graphStr = client.getGraph(); //get the graph
         System.out.println(graphStr);
-        client.addAgent("{\"id\":0}");
-        String agentsStr = client.getAgents();
-        System.out.println(agentsStr);
+
         String pokemonsStr = client.getPokemons();
         System.out.println(pokemonsStr);
+
+        int amountAgent = Game.updateAmountAgent(client.getInfo());
+        for (int i = 0; i < amountAgent; i++)
+            client.addAgent("{\"id\":" + i + "}");
+        String agentsStr = client.getAgents();
+        System.out.println(agentsStr);
+
         String isRunningStr = client.isRunning();
         System.out.println(isRunningStr);
 
         Game game = new Game(agentsStr, pokemonsStr, graphStr);
-
-
+        //String playerID = "207689621";
+        boolean firstTime = true;
+        String turnData;
+        //client.login("111");
         client.start();
+        int time=Integer.parseInt(client.timeToEnd());
 
         while (client.isRunning().equals("true"))
         {
-            for(Agent agent: game.getAgents().values())
+            if (firstTime || Integer.parseInt(client.timeToEnd()) < time - 3000)
             {
-                client.chooseNextEdge("{\"agent_id\":" + agent.id + ", \"next_node_id\": " + agent.dest + "}");
+                firstTime = false;
+                time= Integer.parseInt(client.timeToEnd());
+                game.agentsUpdate();
+                client.move();
             }
-            boolean stopGame = game.update();
+            else
+                continue;
 
-            client.move();
-            //System.out.println(client.getAgents());
-            for(Agent agent: game.getAgents().values())
-            {
-                System.out.println("agent: " + agent.id + ", src: " + agent.src + ", dest: " + agent.dest + ", value: " + agent.value);
-            }
-            System.out.println(client.timeToEnd());
+
+
+            for (Agent agent: game.agents.values())
+                if (agent.dest == -1)
+                    game.calculate(agent);
+
+            for(Agent agent: game.agents.values())
+                client.chooseNextEdge("{\"agent_id\":"+agent.id+", \"next_node_id\": "+agent.dest+"}");
+
+            System.out.println(game.counterPoints);
+            System.out.println(client.getAgents());
 
         }
     }

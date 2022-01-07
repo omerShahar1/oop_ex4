@@ -3,35 +3,47 @@ package run;
 import api.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.util.*;
 
 public class Game
 {
     public DirectedWeightedGraphAlgorithms algo;
     public HashMap<Integer, Agent> agents;
+    public HashMap<Integer, HashMap<Integer, Double>> points; //points of every edge
     public ArrayList<Pokemon> pokemons;
-    public static final double EPS1 = 0.001, EPS2 = EPS1 * EPS1;
+    public double counterPoints; //how many points we made.
+    public double totalPoints;  //how many points the game can have.
 
     public Game(String agentsStr, String pokemonStr, String graphStr)
     {
         this.algo = new Algo(graphStr); //init the algo and the graph
         this.agents = new HashMap<>();
         this.pokemons = new ArrayList<>();
+        points = new HashMap<>();
+        counterPoints = 0;
+        totalPoints = 0;
+
+        Iterator<NodeData> nodeIter1 = algo.getGraph().nodeIter();
+        Iterator<NodeData> nodeIter2;
+        while (nodeIter1.hasNext())
+        {
+            NodeData node1 = nodeIter1.next();
+            points.put(node1.getKey(), new HashMap<>());
+            nodeIter2 = algo.getGraph().nodeIter();
+            while (nodeIter2.hasNext())
+            {
+                points.get(node1.getKey()).put(nodeIter2.next().getKey(), 0.0);
+            }
+        }
 
         addAgent(agentsStr); //init the list (the hashmap) of agents
         addPokemon(pokemonStr); //init the list (arrayList) of pokemons.
         set_edges_for_pokemon();
     }
 
-    public HashMap<Integer, Agent> getAgents() {
-        return agents;
-    }
-
-    public ArrayList<Pokemon> getPokemons() {
-        return pokemons;
-    }
-
-    public void addPokemon(String jsonStr)
+    public void addPokemon(String jsonStr) //receive json string of the pokemons and insert them to the game
     {
         JSONObject j = new JSONObject(jsonStr);
         JSONArray pockemonArray = j.getJSONArray("Pokemons");
@@ -45,11 +57,13 @@ public class Game
             double x = Double.parseDouble(pos[0]);
             double y = Double.parseDouble(pos[1]);
             double z = Double.parseDouble(pos[2]);
-            this.pokemons.add(new Pokemon(value, type,  new Location(x,y,z)));
+            Pokemon newPokemon = new Pokemon(value, type,  new Location(x,y,z));
+            this.pokemons.add(newPokemon);
+            totalPoints += newPokemon.value;
         }
     }
 
-    public void addAgent(String jsonStr)
+    public void addAgent(String jsonStr) //receive json string of the agents and insert them to the game
     {
         JSONObject j = new JSONObject(jsonStr);
         JSONArray agentsArray = j.getJSONArray("Agents");
@@ -62,55 +76,36 @@ public class Game
             int src = currentAgent.getInt("src");
             int dest = currentAgent.getInt("dest");
             double speed = currentAgent.getDouble("speed");
-            this.agents.put(id, new Agent(id, src, dest, speed));
+            String[] pos = currentAgent.getString("pos").split(",");
+            double x = Double.parseDouble(pos[0]);
+            double y = Double.parseDouble(pos[1]);
+            double z = Double.parseDouble(pos[2]);
+            this.agents.put(id, new Agent(id, src, dest, speed, new Location(x,y,z)));
         }
     }
 
 
-    private void set_edges_for_pokemon()
+    public static int updateAmountAgent(String jsonStr)
     {
-        for(Pokemon p: pokemons)
-        {
-            Iterator<EdgeData> iter = algo.getGraph().edgeIter();
-            while (iter.hasNext())
-            {
-                EdgeData edge = iter.next();
-                if(isOnEdge(p.pos, edge, p.type))
-                {
-                    p.edge = edge;
-                    break;
-                }
-            }
-        }
+        JSONObject j = new JSONObject(jsonStr);
+        JSONObject gameServer = j.getJSONObject("GameServer");
+        return gameServer.getInt("agents");
     }
+
 
     /**
-     * This method checks whether pokemon object is on the edge
-     *
-     * @param p    the location of the pokemon by coordinate
-     * @param e    the edge that the pokemon stays on
-     * @param type the status of the location of the pokemon (if his moving up or down)
-     * @return true if and only if this pokemon object are in the edge
+     * This method set the edge value in all the game pokemons
      */
-    private boolean isOnEdge(GeoLocation p, EdgeData e, int type)
+    private void set_edges_for_pokemon()
     {
-        int src = e.getSrc();
-        int dest = e.getDest();
-        if (type < 0 && dest > src)
-            return false;
-
-        if (type > 0 && dest < src)
-            return false;
-
-        GeoLocation srcLocation = algo.getGraph().getNode(src).getLocation();
-        GeoLocation destLocation = algo.getGraph().getNode(dest).getLocation();
-        boolean ans = false;
-        double dist = srcLocation.distance(destLocation);
-        double d1 = srcLocation.distance(p) + p.distance(destLocation);
-        if (dist > d1 - EPS2)
-            ans = true;
-        return ans;
+        for(Pokemon pokemon: pokemons)
+        {
+            EdgeData edge = findEdgeOfPokemon(pokemon.pos, pokemon.type);
+            pokemon.edge = edge;
+            points.get(edge.getSrc()).put(edge.getDest(), pokemon.value);
+        }
     }
+
 
     /**
      * calculating the closest Pokemon to an agent (with no target).
@@ -144,10 +139,7 @@ public class Game
         }
 
         if (answer == null)
-        {
-            agent.flag_stop_move = true;
             return;
-        }
 
         agent.path = algo.shortestPath(agent.src, answer.edge.getSrc());
         agent.target = answer;
@@ -155,18 +147,67 @@ public class Game
         answer.targeted = true;
     }
 
-    public boolean update()
+
+    public void agentsUpdate()
     {
         for (Agent agent: agents.values())
         {
-            if(agent.dest == -1)
-                calculate(agent);
-
-            if(agent.flag_stop_move)
+            if(agent.target == null)
                 continue;
 
-            agent.update();
+            counterPoints += (points.get(agent.src).get(agent.dest));
+            agent.value += (points.get(agent.src).get(agent.dest));
+            points.get(agent.src).put(agent.dest, 0.0);
+            agent.pos = algo.getGraph().getNode(agent.dest).getLocation();
+
+            if(agent.src == agent.target.edge.getSrc()) //we reached the target.
+            {
+                agent.src = agent.dest;
+                agent.dest = -1;
+                agent.target = null;
+                agent.path = null;
+            }
+            else //we didn't reach the target yet.
+            {
+                agent.path.removeFirst();
+                agent.src = agent.path.getFirst().getKey();
+                if(agent.path.size() == 1)
+                    agent.dest = agent.target.edge.getDest();
+                else
+                    agent.dest = agent.path.get(1).getKey();
+            }
         }
-        return true;
     }
+
+
+
+    public EdgeData findEdgeOfPokemon(GeoLocation pos, int type) {
+        Iterator<EdgeData> iterator = algo.getGraph().edgeIter();
+        while (iterator.hasNext())
+        {
+            EdgeData edge = iterator.next();
+            double distSrcDest = findDistance(algo.getGraph().getNode(edge.getSrc()).getLocation(), algo.getGraph().getNode(edge.getDest()).getLocation());
+            double distSrcPok = findDistance(algo.getGraph().getNode(edge.getSrc()).getLocation(), pos);
+            double distDestPok = findDistance(algo.getGraph().getNode(edge.getDest()).getLocation(), pos);
+            if (Math.abs(distSrcDest - (distDestPok + distSrcPok)) < 0.000001)
+            {
+                if (type < 0 && edge.getSrc() > edge.getDest())
+                {
+                    return edge;
+                }
+                else if (type > 0 && edge.getDest() > edge.getSrc())
+                {
+                    return edge;
+                }
+            }
+        }
+        return null;
+    }
+
+
+    public Double findDistance(GeoLocation a, GeoLocation b)
+    {
+        return Math.sqrt(Math.pow((a.x() - b.x()), 2) + Math.pow((a.y() - b.y()), 2));
+    }
+
 }

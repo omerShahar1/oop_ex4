@@ -10,6 +10,7 @@ public class Pokemon
     public GeoLocation pos;
     public EdgeData edge;
     public boolean targeted;
+    public boolean caught;
 
     public Pokemon(double value, int type, GeoLocation pos)
     {
@@ -17,5 +18,6 @@ public class Pokemon
         this.type = type;
         this.pos = pos;
         targeted = false;
+        caught = false;
     }
 }

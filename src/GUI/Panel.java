@@ -141,7 +141,7 @@ public class Panel extends JPanel {
             g.fillPolygon(xpoints,ypoints,3);
         }
 
-        HashMap<Integer, Agent> agents = game.getAgents();
+        HashMap<Integer, Agent> agents = game.agents;
         g.setColor(Color.orange);
         for (Agent agent : agents.values()) {
             GeoLocation location = graph.getNode(agent.src).getLocation();
@@ -150,7 +150,7 @@ public class Panel extends JPanel {
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
         }
 
-        ArrayList<Pokemon> pokemons = game.getPokemons();
+        ArrayList<Pokemon> pokemons = game.pokemons;
         g.setColor(Color.pink);
         for (int i=0; i<pokemons.size(); i++) {
             GeoLocation location = pokemons.get(i).pos;
