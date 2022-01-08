@@ -17,10 +17,7 @@ import java.util.LinkedList;
 public class Panel extends JPanel {
     DirectedWeightedGraphAlgorithms alg;
     Game game;
-    LinkedList<GeoLocation> points = new LinkedList<GeoLocation>();
-
     Graph graph;
-//    HashMap<Integer, NodeData> nodes;
 
     double Xmin;
     double Xmax;
@@ -49,9 +46,7 @@ public class Panel extends JPanel {
 
         graph = (Graph) this.alg.getGraph();
 
-
         Iterator<NodeData> nodes = this.graph.nodeIter();
-
         boolean in = true;
         while (nodes.hasNext()) {
             NodeData n = nodes.next();
@@ -82,8 +77,19 @@ public class Panel extends JPanel {
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         this.setBounds((int) 110, (int) 20, (int) absX, (int) absY);
 
+//        double width = size.getWidth();
+//        double height = size.height;
+
         scaleX = screen.getWidth() / absX * 0.6;
-        scaleY = screen.getHeight() / absY * 0.6;
+        scaleY = this.getHeight() / absY * 0.6;
+
+
+
+//        scaleX = screen.getWidth() / absX * 0.6;
+//        scaleY = screen.getHeight() / absY * 0.6;
+
+        System.out.println("width " + scaleX);
+        System.out.println(this.getHeight());
 
     }
 
@@ -150,6 +156,9 @@ public class Panel extends JPanel {
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
         }
 
+        System.out.println("agent");
+
+
         ArrayList<Pokemon> pokemons = game.getPokemons();
         g.setColor(Color.pink);
         for (int i=0; i<pokemons.size(); i++) {
@@ -158,6 +167,7 @@ public class Panel extends JPanel {
             double posY = (location.y() - Ymin) * scaleY + 12;
             g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
         }
+        System.out.println("pock");
     }
 }
 

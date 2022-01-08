@@ -6,7 +6,11 @@ import api.Graph;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
+import org.json.JSONObject;
 import run.Game;
 
 public class Frame extends JFrame {
@@ -18,7 +22,7 @@ public class Frame extends JFrame {
         this.algo = algo;
         this.game = game;
 
-        this.setTitle("Zadok & Omer's Pockemon Game");
+        this.setTitle("Omer & Zadok's Pockemon Game");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1400, 800);
         this.getContentPane().setBackground(new Color(94, 87, 87));
@@ -34,19 +38,26 @@ public class Frame extends JFrame {
         // End of head label
         ///////////////////////////////////
 
-
         Panel panel = new Panel(this.algo, this.game);
         this.add(head);
         this.add(panel);
+
         this.setVisible(true);
+//        LoginPage logIn = new LoginPage();
     }
 
     public static void main(String[] args) {
-        DirectedWeightedGraphAlgorithms algo = null;
+//        DirectedWeightedGraphAlgorithms algo = null;
+//
+//        try {
+//            String json = new String(Files.readAllBytes(Paths.get("data/A0")));
+//            Graph g = new Graph(json);
+//            algo = new Algo(g);
+//            Game game = new Game();
+//            Frame frame = new Frame(algo, game);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        Graph g = new Graph("data/A0");
-        algo = new Algo(g);
-        Game game = null;
-        Frame frame = new Frame(algo, game);
     }
 }
