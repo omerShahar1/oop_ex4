@@ -14,7 +14,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 
-public class Panel extends JPanel {
+public class Panel extends JPanel
+{
     DirectedWeightedGraphAlgorithms alg;
     Game game;
     Graph graph;
@@ -38,7 +39,8 @@ public class Panel extends JPanel {
     double destX;
     double destY;
 
-    public Panel(DirectedWeightedGraphAlgorithms alg, Game game) {
+    public Panel(Game game)
+    {
         this.alg = alg;
         this.game = game;
         this.setBackground(Color.lightGray);
@@ -170,4 +172,6 @@ public class Panel extends JPanel {
         System.out.println("pock");
     }
 }
+
+
 

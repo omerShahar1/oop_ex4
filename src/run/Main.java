@@ -1,5 +1,4 @@
 package run;
-
 import org.json.JSONObject;
 import java.io.IOException;
 
@@ -17,15 +16,16 @@ public class Main
 
 
 
-        Game game = new Game();
+        Game game = new Game(client);
         game.setGraph(client.getGraph());
-
-        int firstNode = game.getAlgoGraph().center().getKey();
+        int firstNode = game.getAlgo().center().getKey();
         JSONObject info = new JSONObject(client.getInfo());
         JSONObject amountInfo = info.getJSONObject("GameServer");
         int amountAgent = amountInfo.getInt("agents");
         for (int i = 0; i < amountAgent; i++)
             client.addAgent("{\"id\":"+firstNode+"}");
+
+
 
         client.start();
         long time=0;

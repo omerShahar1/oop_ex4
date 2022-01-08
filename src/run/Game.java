@@ -11,15 +11,17 @@ public class Game
     private ArrayList<Pokemon> pokemons;
     private HashMap<Integer, Agent> agents;
     private DirectedWeightedGraphAlgorithms algo;
+    private final Client client;
 
-    public Game()
+    public Game(Client client)
     {
         this.algo = null;
         this.agents = new HashMap<>();
         this.pokemons = new ArrayList<>();
+        this.client = client;
     }
 
-    public DirectedWeightedGraphAlgorithms getAlgoGraph() {
+    public DirectedWeightedGraphAlgorithms getAlgo() {
         return algo;
     }
 
@@ -36,10 +38,16 @@ public class Game
     }
 
 
+    public Client getClient() {
+        return client;
+    }
+
+
     public void updateAgent(String jsonStr)
     {
         agents.clear();
         JSONObject j = new JSONObject(jsonStr);
+        System.out.println(j.toString());
         JSONArray agentsArray = j.getJSONArray("Agents");
 
         for(int i = 0; i < agentsArray.length(); i++)
