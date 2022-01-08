@@ -1,8 +1,6 @@
 package run;
 
 import api.*;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Agent {
     private final int id;
@@ -11,7 +9,6 @@ public class Agent {
     private int dest;
     private double speed;
     private GeoLocation pos;
-    public Queue<Integer> path;
 
     public Agent(int id, int src, int dest, double speed, GeoLocation pos) {
         this.id = id;
@@ -20,7 +17,7 @@ public class Agent {
         this.dest = dest;
         this.speed = speed;
         this.pos = pos;
-        path = new LinkedList<>();
+
     }
 
     public int getId() {

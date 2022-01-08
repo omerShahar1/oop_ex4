@@ -73,6 +73,8 @@ public class Algo implements DirectedWeightedGraphAlgorithms
     @Override
     public double shortestPathDist(int src, int dest)
     {// final complexity is: o(ElogV)
+        if(src == dest)
+            return 0.0;
         HashMap<Integer, ArrayList<AdjListNode>> ew = new HashMap<>(); //sore for every node (key is node id) the list of adjust nodes
         //in the form of AdjlistNode object (look up in the static class for explanation).
         HashMap<Integer, Double> dist = new HashMap<>(); //store distance from the src to every other node.
