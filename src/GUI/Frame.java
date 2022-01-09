@@ -43,18 +43,29 @@ public class Frame implements ActionListener
 
 
     /**
-     * This function create the stop button
-     * locate it on the frame
+     * This function update the score and the time of the game
+     * @param game
      */
-    public void setButtonStop()
+    public void update(Game game)
     {
-        stop = new JButton("Stop");
-        stop.addActionListener(this);
-        stop.setHorizontalTextPosition(JButton.CENTER);
-        stop.setSize(20,20);
-        stop.setForeground(Color.black);
-        stop.setBounds(500,20,100,40);
-        TimeScore.add(stop,BorderLayout.AFTER_LINE_ENDS);
+        JSONObject info = new JSONObject(game.getClient().getInfo());
+        JSONObject amountInfo = info.getJSONObject("GameServer");
+        Score = amountInfo.getDouble("grade");
+        Time = "" + Long.parseLong(game.getClient().timeToEnd())/1000;
+
+        TimeScore.setBounds(0,0,frame.getWidth(),100);
+        panel.setBounds(0,100,frame.getWidth(),frame.getHeight()-135);
+        if (frame.getWidth() > 900)
+        {
+            score_label.setLocation((frame.getWidth() / 10) - 20, 20);
+            time_label.setLocation((frame.getWidth() / 10) * 4 + 40, 20);
+            stop.setLocation(frame.getWidth() - 150, 20);
+        }
+
+        this.score_label.setText("Score :" + Score);
+        this.time_label.setText("Time: "+Time);
+        frame.repaint();
+
     }
 
     /**
@@ -85,29 +96,18 @@ public class Frame implements ActionListener
 
 
     /**
-     * This function update the score and the time of the game
-     * @param game
+     * This function create the stop button
+     * locate it on the frame
      */
-    public void update(Game game)
+    public void setButtonStop()
     {
-        JSONObject info = new JSONObject(game.getClient().getInfo());
-        JSONObject amountInfo = info.getJSONObject("GameServer");
-        Score = amountInfo.getDouble("grade");
-        Time = "" + Long.parseLong(game.getClient().timeToEnd())/1000;
-
-        TimeScore.setBounds(0,0,frame.getWidth(),100);
-        panel.setBounds(0,100,frame.getWidth(),frame.getHeight()-135);
-        if (frame.getWidth() > 900)
-        {
-            score_label.setLocation((frame.getWidth() / 10) - 20, 20);
-            time_label.setLocation((frame.getWidth() / 10) * 4 + 40, 20);
-            stop.setLocation(frame.getWidth() - 150, 20);
-        }
-
-        this.score_label.setText("Score :" + Score);
-        this.time_label.setText("Time: "+Time);
-        frame.repaint();
-
+        stop = new JButton("Stop");
+        stop.addActionListener(this);
+        stop.setHorizontalTextPosition(JButton.CENTER);
+        stop.setSize(20,20);
+        stop.setForeground(Color.black);
+        stop.setBounds(500,20,100,40);
+        TimeScore.add(stop,BorderLayout.AFTER_LINE_ENDS);
     }
 
     public void close()
