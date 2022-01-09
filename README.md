@@ -20,7 +20,7 @@ java -jar Ex4_Server_v0.0.jar <enter scenario number>
 then run the main function in the class "Main" or if you preffer, run the "oop_ex4_jar" we created (both ways will have the same effect)
 
 
-![Alt Text](images/pokemon_game_video.gif)
+![Alt Text](<iframe src="https://giphy.com/embed/62hKeIs5gHw5ZbCC7n" width="480" height="248" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/62hKeIs5gHw5ZbCC7n">via GIPHY</a></p>)
 
 | *A short video clip of Our gui representation of the pokemon game case 5* |
 
