@@ -1,177 +1,130 @@
 package GUI;
 
-import api.*;
+import api.EdgeData;
+import api.GeoLocation;
+import api.NodeData;
 import run.Agent;
 import run.Game;
 import run.Pokemon;
-
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 
 public class Panel extends JPanel
 {
-    DirectedWeightedGraphAlgorithms alg;
-    Game game;
-    Graph graph;
+    private final Game game;
+    private double xMin;
+    private double yMin;
+    private double xMax;
+    private double yMax;
+    private BufferedImage imageAgent;
+    private BufferedImage imagePok1;
+    private BufferedImage imagePok2;
 
-    double Xmin;
-    double Xmax;
-    double Ymin;
-    double Ymax;
-
-    double absX;
-    double absY;
-    double scaleX;
-    double scaleY;
-
-    int src;
-    int dest;
-    GeoLocation srcL;
-    GeoLocation destL;
-    double srcX;
-    double srcY;
-    double destX;
-    double destY;
 
     public Panel(Game game)
     {
-        this.alg = alg;
         this.game = game;
-        this.setBackground(Color.lightGray);
-        this.setPreferredSize(new Dimension(1350, 600));
+        scalingsize();
 
-        graph = (Graph) this.alg.getGraph();
+        setPreferredSize(new Dimension(900, 600));
 
-        Iterator<NodeData> nodes = this.graph.nodeIter();
-        boolean in = true;
-        while (nodes.hasNext()) {
-            NodeData n = nodes.next();
-            GeoLocation l = n.getLocation();
-            if (in == true) {
-                Xmin = l.x();
-                Xmax = l.x();
-                Ymin = l.y();
-                Ymax = l.y();
-            }
-            in = false;
-            if (l.x() < Xmin) {
-                Xmin = l.x();
-            } else if (l.x() > Xmax) {
-                Xmax = l.x();
-            }
-
-            if (l.y() < Ymin) {
-                Ymin = l.y();
-            } else if (l.y() > Ymax) {
-                Ymax = l.y();
-            }
+        try
+        {
+            imagePok1 = ImageIO.read(new File("images/pika.png"));
+            imagePok2 = ImageIO.read(new File("images/balbazor.png"));
+            imageAgent = ImageIO.read(new File("images/ash.png"));
         }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+        repaint();
+    }
 
-        absX = Math.abs(Xmax - Xmin);
-        absY = Math.abs(Ymax - Ymin);
+    private void scalingsize()
+    {
+        xMin = Integer.MAX_VALUE;
+        yMin = Integer.MAX_VALUE;
+        xMax = Integer.MIN_VALUE;
+        yMax = Integer.MIN_VALUE;
+        Iterator<NodeData> iterator = this.game.getAlgo().getGraph().nodeIter();
+        while (iterator.hasNext())
+        {
+            NodeData node = iterator.next();
+            xMin = Math.min(node.getLocation().x(), xMin);
+            yMin = Math.min(node.getLocation().y(), yMin);
+            xMax = Math.max(node.getLocation().x(), xMax);
+            yMax = Math.max(node.getLocation().y(), yMax);
+        }
+    }
 
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setBounds((int) 110, (int) 20, (int) absX, (int) absY);
 
-//        double width = size.getWidth();
-//        double height = size.height;
-
-        scaleX = screen.getWidth() / absX * 0.6;
-        scaleY = this.getHeight() / absY * 0.6;
+    private int getXScale(GeoLocation pos) {
+        return (int) ((((pos.x() - xMin) / (xMax - xMin)) * this.getWidth() * 0.9) + (0.05 * this.getWidth()));
+    }
 
 
-
-//        scaleX = screen.getWidth() / absX * 0.6;
-//        scaleY = screen.getHeight() / absY * 0.6;
-
-        System.out.println("width " + scaleX);
-        System.out.println(this.getHeight());
-
+    private int getYScale(GeoLocation pos) {
+        return (int) ((((pos.y() - yMin) * (this.getHeight() - 100) / (yMax - yMin)) * 0.9) + (0.05 * (this.getHeight() - 100)));
     }
 
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(3));
-        g2.setColor(Color.BLUE);
-
-        Iterator<NodeData> nodes = this.graph.nodeIter();
-        while (nodes.hasNext()) {
-
-            NodeData n = nodes.next();
-            GeoLocation location = n.getLocation();
-            double posX = (location.x() - Xmin) * scaleX + 12;
-            double posY = (location.y() - Ymin) * scaleY + 12;
-
-            g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
-        }
-        Iterator<EdgeData> edges = this.graph.edgeIter();
-
-        while (edges.hasNext()) {
-            EdgeData e = edges.next();
-            src = e.getSrc();
-            dest = e.getDest();
-            srcL = graph.getNode(src).getLocation();
-            destL = graph.getNode(dest).getLocation();
-
-            srcX = (srcL.x() - Xmin) * scaleX + 12;
-            srcY = (srcL.y() - Ymin) * scaleY + 12;
-            destX = (destL.x() - Xmin) * scaleX + 12;
-            destY = (destL.y() - Ymin) * scaleY + 12;
-
-            g2.drawLine((int) srcX, (int) srcY, (int) destX, (int) destY);
-
-            int dx = (int)(destX - srcX);
-            int dy = (int)(destY - srcY);
-            double d = Math.sqrt(dx * dx + dy * dy);
-            double xm = d - 10;
-            double xn = xm;
-            double ym = 10;
-            double yn = -10,x;
-            double sin = dy / d, cos = dx / d;
-            x = xm * cos - ym * sin + srcX;
-            ym = xm * sin + ym * cos + srcY;
-            xm = x;
-            x = xn * cos - yn * sin + srcX;
-            yn = xn * sin + yn * cos + srcY;
-            xn = x;
-            int[] xpoints = {(int)destX, (int) xm, (int) xn};
-            int[] ypoints = {(int)destY, (int) ym, (int) yn};
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+        Graphics2D g1 = (Graphics2D) g;
+        Iterator<NodeData> nodes = this.game.getAlgo().getGraph().nodeIter();
+        while (nodes.hasNext())
+        {
+            NodeData node = nodes.next();
             g.setColor(Color.red);
-            g.fillPolygon(xpoints,ypoints,3);
+            g.fillOval(getXScale(node.getLocation()), getYScale(node.getLocation()), 15, 15);
+            g.drawString(node.getKey() + "", getXScale(node.getLocation()), getYScale(node.getLocation()));
+        }
+        Iterator<EdgeData> Edges = this.game.getAlgo().getGraph().edgeIter();
+        while (Edges.hasNext())
+        {
+            EdgeData currEdge = Edges.next();
+            NodeData src = this.game.getAlgo().getGraph().getNode(currEdge.getSrc());
+            NodeData dest = this.game.getAlgo().getGraph().getNode(currEdge.getDest());
+            g.setColor(Color.BLACK);
+            g.drawLine(getXScale(src.getLocation()) + 8, getYScale(src.getLocation()) + 8, getXScale(dest.getLocation()) + 8, getYScale(dest.getLocation()) + 8);
+            drawArrow(g1, getXScale(src.getLocation()) + 8, getYScale(src.getLocation()) + 8, getXScale(dest.getLocation()) + 8, getYScale(dest.getLocation()) + 8);
         }
 
-        HashMap<Integer, Agent> agents = game.getAgents();
-        g.setColor(Color.orange);
-        for (Agent agent : agents.values()) {
-            GeoLocation location = graph.getNode(agent.getSrc()).getLocation();
-            double posX = (location.x() - Xmin) * scaleX + 12;
-            double posY = (location.y() - Ymin) * scaleY + 12;
-            g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
+        g.setColor(Color.gray);
+        for (Pokemon pokemon: game.getPokemons())
+        {
+            if(pokemon.getType() > 0)
+                g.drawImage(imagePok1, getXScale(pokemon.getPos()) - 8, getYScale(pokemon.getPos()) - 8, 40, 40, null);
+            else
+                g.drawImage(imagePok2, getXScale(pokemon.getPos()) - 8, getYScale(pokemon.getPos()) - 8, 35, 35, null);
         }
-
-        System.out.println("agent");
-
-
-        ArrayList<Pokemon> pokemons = game.getPokemons();
-        g.setColor(Color.pink);
-        for (int i=0; i<pokemons.size(); i++) {
-            GeoLocation location = pokemons.get(i).getPos();
-            double posX = (location.x() - Xmin) * scaleX + 12;
-            double posY = (location.y() - Ymin) * scaleY + 12;
-            g2.fillOval((int) posX - 10, (int) posY - 10, 17, 17);
-        }
-        System.out.println("pock");
+        for (Agent agent: game.getAgents().values())
+            g.drawImage(imageAgent, getXScale(agent.getPos()) - 8, getYScale(agent.getPos()) - 8, 35, 35, null);
     }
+
+
+    void drawArrow(Graphics g1, int x1, int y1, int x2, int y2)
+    {
+        Graphics2D g = (Graphics2D) g1.create();
+        double dx = x2 - x1, dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx * dx + dy * dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+
+        g.drawLine(0, 0, len, 0);
+        g.fillPolygon(new int[]{len, len - 5, len - 5, len}, new int[]{0, -5, 5, 0}, 4);
+    }
+
+
 }
-
-
-

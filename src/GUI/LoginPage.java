@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 public class LoginPage implements ActionListener
 {
-
+    public boolean finished;
     JFrame frame = new JFrame();
     JButton loginButton = new JButton("Login");
     JTextField userIdField = new JTextField();
@@ -18,6 +18,7 @@ public class LoginPage implements ActionListener
 
     public LoginPage(Game game)
     {
+        finished = false;
         this.game = game;
         userIdLabel.setBounds(50, 100, 75, 25);
         messageLabel.setBounds(125, 250, 250, 35);
@@ -43,6 +44,7 @@ public class LoginPage implements ActionListener
         if (e.getSource() == loginButton)
         {
             game.getClient().login(userIdField.getText());
+            finished = true;
             this.frame.dispose();
         }
     }

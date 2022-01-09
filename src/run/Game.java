@@ -12,6 +12,7 @@ public class Game
     private HashMap<Integer, Agent> agents;
     private DirectedWeightedGraphAlgorithms algo;
     private final Client client;
+    private boolean stop_the_game;
 
     public Game(Client client)
     {
@@ -19,6 +20,15 @@ public class Game
         this.agents = new HashMap<>();
         this.pokemons = new ArrayList<>();
         this.client = client;
+        stop_the_game = false;
+    }
+
+    public boolean isStop_the_game() {
+        return stop_the_game;
+    }
+
+    public void setStop_the_game(boolean stop_the_game) {
+        this.stop_the_game = stop_the_game;
     }
 
     public DirectedWeightedGraphAlgorithms getAlgo() {
@@ -47,7 +57,6 @@ public class Game
     {
         agents.clear();
         JSONObject j = new JSONObject(jsonStr);
-        System.out.println(j.toString());
         JSONArray agentsArray = j.getJSONArray("Agents");
 
         for(int i = 0; i < agentsArray.length(); i++)
@@ -88,8 +97,6 @@ public class Game
             this.pokemons.add(newPokemon);
         }
     }
-
-
 
 
     /**
