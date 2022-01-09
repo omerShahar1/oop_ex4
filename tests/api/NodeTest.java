@@ -46,31 +46,4 @@ class NodeTest {
         assertEquals(n.getWeight(),2);
 
     }
-
-    @Test
-    void getInfo()
-    {
-        assertEquals(n.getInfo(),"");
-    }
-
-    @Test
-    void setInfo()
-    {
-        n.setInfo("Ex2");
-        assertEquals(n.getInfo(),"Ex2");
-
-    }
-
-    @Test
-    void getTag()
-    {
-        assertEquals(n.getTag(),0);
-    }
-
-    @Test
-    void setTag()
-    {
-        n.setTag(2);
-        assertEquals(n.getTag(),2);
-    }
 }
