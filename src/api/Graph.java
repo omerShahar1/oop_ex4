@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
-
+/**
+ * This class implements DirectedWeightedGraph interface
+ */
 public class Graph implements DirectedWeightedGraph
 {
     private HashMap<Integer, NodeData> nodes; //the key is the node id.
@@ -54,15 +56,30 @@ public class Graph implements DirectedWeightedGraph
     }
 
 
+    /**
+     * get the node by the node_id,
+     * @param key - the node_id
+     * @return NodeData, null if none
+     */
     @Override
     public NodeData getNode(int key) { return nodes.get(key); }
 
+    /**
+     * get the edge by two nodes represent source and destination
+     * @param src - the id of the node the edge coming from
+     * @param dest - the id of the node the edge go to
+     * @return EdgeData
+     */
     @Override
     public EdgeData getEdge(int src, int dest) {
         String str = src + "," + dest; //every edge will be saved by string representing the edge src and dest with "," between them.
         return edges.get(str);
     }
 
+    /**
+     * add a node to the graph
+     * @param n
+     */
     @Override
     public void addNode(NodeData n)
     {// hash map complexity of put is o(1) so the toal complexity of adding new node is o(1).
@@ -71,6 +88,12 @@ public class Graph implements DirectedWeightedGraph
         MC++;
     }
 
+    /**
+     * connect two nodes -> adding an edge to the graph
+     * @param src - the source of the edge.
+     * @param dest - the destination of the edge.
+     * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
+     */
     @Override
     public void connect(int src, int dest, double w)
     {//hash map complexity of put is o(1) so total complexity would be o(1).
@@ -103,6 +126,11 @@ public class Graph implements DirectedWeightedGraph
         return new SpecificNodesIterator(node_id);
     }
 
+    /**
+     * remove the node with the given key (=id)
+     * @param key
+     * @return  erased NodeData
+     */
     @Override
     public NodeData removeNode(int key)
     {
@@ -121,6 +149,12 @@ public class Graph implements DirectedWeightedGraph
         return nodes.remove(key); //o(1)
     }
 
+    /**
+     * remove the edge with the given two id of nodes representing source and destination
+     * @param src - the id of the node the edge coming from
+     * @param dest - the id of the node the edge go to
+     * @return erased EdgeData
+     */
     @Override
     public EdgeData removeEdge(int src, int dest)
     {
@@ -132,16 +166,28 @@ public class Graph implements DirectedWeightedGraph
         return edges.remove(str);
     }
 
+    /**
+     * returns the number of vertices (nodes) in the graph
+     * @return int
+     */
     @Override
     public int nodeSize() {
         return nodes.size();
     }
 
+    /**
+     * returns the number of edges in the graph
+     * @return int
+     */
     @Override
     public int edgeSize() {
         return edges.size();
     }
 
+    /**
+     * returns the Mode Count - for testing changes in the graph
+     * @return
+     */
     @Override
     public int getMC() {
         return MC;

@@ -7,7 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
+/**
+ * This class contain all the parts of the game
+ */
 public class Frame implements ActionListener
 {
     private final Game game;
@@ -40,6 +42,10 @@ public class Frame implements ActionListener
     }
 
 
+    /**
+     * This function create the stop button
+     * locate it on the frame
+     */
     public void setButtonStop()
     {
         stop = new JButton("Stop");
@@ -51,6 +57,11 @@ public class Frame implements ActionListener
         TimeScore.add(stop,BorderLayout.AFTER_LINE_ENDS);
     }
 
+    /**
+     * This function set the score and the time of the game
+     * @param time
+     * @param score
+     */
     public void setScoreTime(String time,double score)
     {
         TimeScore = new JPanel();
@@ -73,6 +84,10 @@ public class Frame implements ActionListener
     }
 
 
+    /**
+     * This function update the score and the time of the game
+     * @param game
+     */
     public void update(Game game)
     {
         JSONObject info = new JSONObject(game.getClient().getInfo());
@@ -101,7 +116,11 @@ public class Frame implements ActionListener
     }
 
 
-
+    /**
+     * This function listen to the stop button
+     * if the button clicked the game stops
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {

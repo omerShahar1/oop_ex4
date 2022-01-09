@@ -1,6 +1,9 @@
 package api;
 import java.util.*;
 
+/**
+ * This class implements DirectedWeightedGraphAlgorithms interface
+ */
 public class Algo implements DirectedWeightedGraphAlgorithms
 {
     private DirectedWeightedGraph graph;
@@ -11,15 +14,29 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         init(g);
     }
 
+    /**
+     * This function init the graph
+     * @return DirectedWeightedGraph
+     */
     @Override
     public void init(DirectedWeightedGraph g) {graph = g;}
 
+    /**
+     * return the graph
+     * @return DirectedWeightedGraph
+     */
     @Override
     public DirectedWeightedGraph getGraph()
     {
         return graph;
     }
 
+    /**
+     * This function return the total weight of the shortest path dist
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return
+     */
     @Override
     public double shortestPathDist(int src, int dest)
     {// final complexity is: o(ElogV)
@@ -62,6 +79,13 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         return dist.get(dest);
     }
 
+    /**
+     * This function return linked list contain the nodes we should go through
+     * to arrive with the shortest path between to nodes
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return
+     */
     @Override
     public LinkedList<NodeData> shortestPath(int src, int dest)
     {// final complexity is: o(ElogV)
@@ -117,6 +141,11 @@ public class Algo implements DirectedWeightedGraphAlgorithms
     }
 
 
+    /**
+     * This function return a node that from him to the farthest node in graph
+     * it will be the shortest from all the nodes
+     * @return
+     */
     @Override
     public NodeData center()
     {

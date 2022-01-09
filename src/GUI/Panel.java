@@ -15,7 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-
+/**
+ * This class panel is a part of the frame that contains the graph
+ */
 public class Panel extends JPanel
 {
     private final Game game;
@@ -48,6 +50,9 @@ public class Panel extends JPanel
         repaint();
     }
 
+    /**
+     * This function calculate the bounds of the nodes
+     */
     private void scalingsize()
     {
         xMin = Integer.MAX_VALUE;
@@ -66,15 +71,33 @@ public class Panel extends JPanel
     }
 
 
+    /**
+     * This function calculate the scale x position for specific node
+     * to put in the panel
+     *
+     * @param pos
+     * @return
+     */
     private int getXScale(GeoLocation pos) {
         return (int) ((((pos.x() - xMin) / (xMax - xMin)) * this.getWidth() * 0.9) + (0.05 * this.getWidth()));
     }
 
 
+    /**
+     * This function calculate the scale y position for specific node
+     * to put in the panel
+     * @param pos
+     * @return
+     */
     private int getYScale(GeoLocation pos) {
         return (int) ((((pos.y() - yMin) * (this.getHeight() - 100) / (yMax - yMin)) * 0.9) + (0.05 * (this.getHeight() - 100)));
     }
 
+    /**
+     * This function draw the graph on the panel
+     * it's draw the nodes, edges, pockemons and agents
+     * @param g
+     */
     @Override
     public void paint(Graphics g)
     {
@@ -112,6 +135,14 @@ public class Panel extends JPanel
     }
 
 
+    /**
+     * this function draw an arrow for a specific edge
+     * @param g1
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     void drawArrow(Graphics g1, int x1, int y1, int x2, int y2)
     {
         Graphics2D g = (Graphics2D) g1.create();

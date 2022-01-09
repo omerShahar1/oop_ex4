@@ -10,6 +10,16 @@ public class AdjListNode
         vertex = v;
         weight = w;
     }
+
+    /**
+     * This function get the vertex
+     * @return
+     */
     int getVertex() { return vertex; }
+
+    /**
+     * This function get the weight
+     * @return
+     */
     double getWeight() { return weight; }
 }

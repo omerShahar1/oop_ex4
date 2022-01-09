@@ -1,5 +1,8 @@
 package api;
 
+/**
+ * This class implements GeoLocation interface
+ */
 public class Location implements GeoLocation
 {
     private double x,y,z;
@@ -9,21 +12,39 @@ public class Location implements GeoLocation
         this.y=y;
         this.z=z;
     }
+
+    /**
+     * getters for x value
+     * @return double
+     */
     @Override
     public double x() {
         return x;
     }
 
+    /**
+     * getters for y value
+     * @return double
+     */
     @Override
     public double y() {
         return y;
     }
 
+    /**
+     * getters for z value
+     * @return double
+     */
     @Override
     public double z() {
         return z;
     }
 
+    /**
+     * This function measures the distance between the current location and a given location
+     * @param location
+     * @return double
+     */
     @Override
     public double distance(GeoLocation location)
     {
@@ -34,6 +55,10 @@ public class Location implements GeoLocation
         return answer;
     }
 
+    /**
+     * This function return a string represent the location
+     * @return
+     */
     @Override
     public String toString()
     {
