@@ -6,7 +6,7 @@
 
 In this project we implement a Pokémon game, which run on a given server. our goal is to rach as many "pokemons" as possible in the given time.
 
-![Screenshot](data/pic_pokemon_3.png)
+![Screenshot](images/case5.png)
 
 | *Our gui representation of the pokemon game case 5* |
 
