@@ -85,6 +85,21 @@ Implements a single pokemon object in the game
 
 
 
+# Game class
+* the game object represent the current game status. the game includes ArrayList of the game pokemon, HashMap of the agents, the Algo object (from the DirectedWeightedGraphAlgorithms interface) , the Client object of the current scenario and a boolean "stop the game". (all have get functions)
+* we have 1 constructor. it recieve the Client object and create a new game with out any pokemons or agents (yet).
+* the function setGraph will recieve a json string, and use the pre-made Algo constructor to create a new Algo and Graph.
+* the function updateAgent recieve json string represent the new order of our agents and update the agents in the game.
+* the function updatePokemons recieve json string represent the new order of our pokemons and update the pokemons in the game.
+* the function findEdgeOfPokemon recieve a pokemon location as GeoLocation object and a pokemon type as integer and return the correct edge from the graph (the edge our pokemon will be on).
+* the function chooseAgent recieve a pokemon object and return for the pokemon, the best agent to assign.
+* the function planNext will plan for the next moves of the agents.
+
+**few notes:
+* the game will update itself each run by the values we recieve from the server.
+* the game will basicly tell us the best move for the next turn.
+
+
 ## 4. Analysis Algorithms
 Here is our score table:
 
