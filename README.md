@@ -20,7 +20,7 @@ java -jar Ex4_Server_v0.0.jar <enter scenario number>
 then run the main function in the class "Main" or if you preffer, run the "oop_ex4_jar" we created (both ways will have the same effect)
 
 
-![Alt Text](images/pokemon_game_video.mp4)
+![Alt Text](images/pokemon_game_video.gif)
 
 | *A short video clip of Our gui representation of the pokemon game case 5* |
 
