@@ -64,13 +64,24 @@ Implements the edge of the graph.
 
 # Agent class
 Implements a single agent object in the game
-each
+
+![Screenshot](images/ash.png)
+
+| *our agent* |
 
 
 # Pokemon class
 Implements a single pokemon object in the game
 
+![Screenshot](images/pika.png)
 
+| *our pokemon in type 1* |
+
+
+
+![Screenshot](images/balbazor.png)
+
+| *our pokemon in type -1* |
 
 
 
