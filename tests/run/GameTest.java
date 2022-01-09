@@ -1,72 +1,80 @@
 package run;
 
 import api.Algo;
-import api.DirectedWeightedGraph;
-import api.Graph;
+import api.EdgeData;
+import api.Location;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameTest {
-
-    Client client = new Client();
-    Game game = new Game(client);
-
+class GameTest
+{
+    Game game = new Game(new Client());
 
     @Test
-    void isStop_the_game() {
-        assertEquals(game.isStop_the_game(), false);
+    void isStop_the_game()
+    {
+        assertFalse(game.isStop_the_game());
     }
 
     @Test
-    void setStop_the_game() {
+    void setStop_the_game()
+    {
+        assertFalse(game.isStop_the_game());
         game.setStop_the_game(true);
-        assertEquals(game.isStop_the_game(), true);
+        assertTrue(game.isStop_the_game());
+        game.setStop_the_game(false);
+        assertFalse(game.isStop_the_game());
     }
 
     @Test
-    void getAlgo() {
-        DirectedWeightedGraph g = new Graph("data/A0");
-        Algo algo = null;
-        algo.init(g);
-        System.out.println("dfwvf");
-//        assertEquals(game.getAlgo(), algo);
+    void getAlgo()
+    {
+        assertNull(game.getAlgo());
     }
 
     @Test
-    void getPokemons() {
-        ArrayList<Pokemon> pokemons = new ArrayList<>();
-        assertEquals(game.getPokemons(), pokemons);
+    void getPokemons()
+    {
+        assertEquals(game.getPokemons().size(), 0);
     }
 
     @Test
-    void getAgents() {
-        HashMap<Integer, Agent> agents = new HashMap<>();
-        assertEquals(game.getAgents(), agents);
+    void getAgents()
+    {
+        assertEquals(game.getAgents().size(), 0);
     }
 
-
-
     @Test
-    void getClient() {
-        assertEquals(game.getClient(), client);
+    void setGraph() throws IOException
+    {
+        String file = "data/A0";
+        String json = new String(Files.readAllBytes(Paths.get(file)));
+        game.setGraph(json);
+        assertNotEquals(game.getAlgo(), null);
+        assertEquals(game.getAlgo().getGraph().nodeSize(),11);
     }
 
-
+    @Test
+    void getClient()
+    {
+        assertNotEquals(game.getAgents(), null);
+    }
 
     @Test
-    void findEdgeOfPokemon() {
-    }//fo
-
-    @Test
-    void chooseAgent() {
-//        Agent agent =
-    }//gg
-
-    @Test
-    void planNext() {
-    }//hjbhb
+    void findEdgeOfPokemon() throws IOException {
+        String file = "data/A0";
+        String json = new String(Files.readAllBytes(Paths.get(file)));
+        game.setGraph(json);
+        Pokemon pokemon1 = new Pokemon(3.0, 1, new Location(35.197656770719604,32.10191878639921,0.0));
+        Pokemon pokemon2 = new Pokemon(3.0, -1, new Location(35.197656770719604,32.10191878639921,0.0));
+        EdgeData edge1 = game.findEdgeOfPokemon(pokemon1.getPos(), pokemon1.getType());
+        EdgeData edge2 = game.findEdgeOfPokemon(pokemon2.getPos(), pokemon2.getType());
+        assertNotEquals(edge1.getSrc(), edge2.getSrc());
+        assertNotEquals(edge1.getDest(), edge2.getDest());
+    }
 }
