@@ -1,10 +1,16 @@
 # OOP-Ex4
-## welcome to the README
+### welcome to the README
 
 
 ## what is this project?
 
 In this project we implement a Pokémon game, which run on a given server. our goal is to rach as many "pokemons" as possible in the given time.
+
+![Screenshot](data/pic_pokemon_3.png)
+
+| *Our gui representation of the pokemon game case 5* |
+
+
 
 ## How to run
 to activate the server, write in the terminal:
@@ -53,6 +59,7 @@ Implements the edge of the graph.
 
 # Agent class
 Implements a single agent object in the game
+each
 
 
 # Pokemon class
