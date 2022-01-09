@@ -121,3 +121,9 @@ Here is our score table:
 | 13  | 320 |  588  |
 | 14  | 100 |  290  |
 | 15 | 218 |  584  |
+
+
+
+![Screenshot](images/UML.png)
+
+| *our UML* |
