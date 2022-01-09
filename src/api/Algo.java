@@ -5,19 +5,11 @@ public class Algo implements DirectedWeightedGraphAlgorithms
 {
     private DirectedWeightedGraph graph;
 
-    public Algo()
-    {
-        this.graph = null;
-    }
-
     public Algo(String jsonString)
     {
         Graph g = new Graph(jsonString);
         init(g);
     }
-
-    public Algo(DirectedWeightedGraph graph) { init(graph); }
-
 
     @Override
     public void init(DirectedWeightedGraph g) {graph = g;}
@@ -26,48 +18,6 @@ public class Algo implements DirectedWeightedGraphAlgorithms
     public DirectedWeightedGraph getGraph()
     {
         return graph;
-    }
-
-    @Override
-    public DirectedWeightedGraph copy()
-    {
-        return new Graph(graph);
-    }
-
-
-    @Override
-    public boolean isConnected() //worst case: o(V*(V+E))
-    {
-        HashMap<Integer, List<Integer>> adjList = new HashMap<>(); //sore for every node (key is node id) the list of adjust nodes.
-        HashMap<Integer, Boolean> visited = new HashMap<>(); //store for every run how many nodes we visited
-        HashMap<Integer, Boolean> falseVisit = new HashMap<>(); //used to zero the visited after every run.
-        // (if one of them is false in the end of each run then the graph is not connected).
-        Iterator<NodeData> nodeIter = graph.nodeIter();
-        while (nodeIter.hasNext())
-        {
-            NodeData node = nodeIter.next();
-            adjList.put(node.getKey(), new ArrayList<>());
-            visited.put(node.getKey(), false);
-            falseVisit.put(node.getKey(), false);
-        }
-
-        // add edges to the directed graph
-        Iterator<EdgeData> iter = graph.edgeIter();
-        while(iter.hasNext())
-        {
-            EdgeData e = iter.next();
-            adjList.get(e.getSrc()).add(e.getDest());
-        }
-
-        nodeIter = graph.nodeIter();
-        while (nodeIter.hasNext()) // do for every node
-        {
-            DFS(adjList, nodeIter.next().getKey(), visited);
-            if (visited.containsValue(false))
-                return false;
-            visited.putAll(falseVisit);
-        }
-        return true;
     }
 
     @Override
@@ -164,23 +114,6 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         }
         list.addFirst(graph.getNode(src));
         return list;
-    }
-
-    private static void DFS(HashMap<Integer, List<Integer>> adjList, int v, HashMap<Integer, Boolean> visited)
-    {//non-recursive DFS for a given src id. would finish when we don't have any nodes to go to. (complexity of o(E+V))
-        Stack<Integer> stack = new Stack<>();
-        stack.push(v);
-        while (!stack.empty())
-        {
-            v = stack.pop();
-            if (visited.get(v))
-                continue;
-
-            visited.put(v, true);
-            for (Integer i : adjList.get(v))
-                if (!visited.get(i))
-                    stack.push(i);
-        }
     }
 
 

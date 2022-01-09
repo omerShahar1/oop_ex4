@@ -1,0 +1,185 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+interface DirectedWeightedGraph
+interface DirectedWeightedGraphAlgorithms
+interface EdgeData
+interface GeoLocation
+interface NodeData
+class Algo
+class AdjListNode
+class Graph
+class Location
+class Node
+class Edge
+class Agent
+class Client
+class Pokemon
+class Game
+
+DirectedWeightedGraph -- Graph
+DirectedWeightedGraphAlgorithms -- Algo
+EdgeData -- Edge
+GeoLocation -- Location
+NodeData -- Node
+DirectedWeightedGraphAlgorithms <|-- DirectedWeightedGraph
+DirectedWeightedGraph <|-- EdgeData
+DirectedWeightedGraph <|-- NodeData
+DirectedWeightedGraph <|-- AdjListNode
+DirectedWeightedGraph <|-- GeoLocation
+Game <|-- Pokemon
+Game <|-- Agent
+Game <|-- Client
+Game <|-- DirectedWeightedGraphAlgorithms
+Game <|-- GeoLocation
+Pokemon <|-- GeoLocation
+Agent <|-- GeoLocation
+
+
+class AdjListNode
+{
+    -int vertex;
+    -double weight;
+    +AdjListNode(int, double)
+    +int getVertex()
+    +double getWeight()
+}
+
+class Graph
+{
+    -HashMap<Integer, NodeData> nodes
+    -HashMap<String, EdgeData> edges
+    -int MC
+    -HashMap<Integer, HashMap<Integer, EdgeData>> outEdges
+    -HashMap<Integer, HashMap<Integer, EdgeData>> inEdges
+    -HashMap<Integer, Integer> changes
+    +Graph(String)
+    +NodeData getNode(int)
+    +EdgeData getEdge(int, int)
+    +void addNode(NodeData)
+    +void connect(int, int, double)
+    +Iterator<NodeData> nodeIter()
+    +Iterator<EdgeData> edgeIter()
+    +Iterator<EdgeData> edgeIter(int node_id)
+    +NodeData removeNode(int)
+    +EdgeData removeEdge(int, int)
+    +int nodeSize()
+    +int edgeSize()
+    +int getMC()
+}
+
+class Algo
+{
+    -DirectedWeightedGraph graph
+    +Algo(String)
+    +init(DirectedWeightedGraph)
+    +double shortestPathDist(int, int)
+    +LinkedList<NodeData> shortestPath(int, int)
+    +LinkedList<NodeData> checkPath(HashMap<Integer, Integer>, int, int)
+    +NodeData center()
+    +double dijkstra(int, HashMap<Integer, ArrayList<AdjListNode>>)
+}
+
+class Edge
+{
+    -int src
+    -int dest
+    -double weight
+    -String info
+    -int tag
+    +Edge(int, int, double
+    +int getSrc()
+    +int getDest()
+    +double getWeight()
+    +String getInfo()
+    +void setInfo(String s)
+    +int getTag()
+    +void setTag(int t)
+}
+
+class Node
+{
+    -int id
+    -double weight
+    -GeoLocation location
+    +Node(int, double, double, double)
+    +int getKey()
+    +GeoLocation getLocation()
+    +void setLocation(GeoLocation)
+    +double getWeight()
+    +void setWeight(double)
+}
+
+class Location
+{
+    -double x
+    -double y
+    -double z
+    +double x()
+    +double y()
+    +double z()
+    +double distance(GeoLocation)
+    +String toString()
+}
+
+class Agent
+{
+    -int id
+    -double value
+    -int src
+    -int dest
+    -double speed
+    -GeoLocation pos
+    +Agent(int, int, int, double, GeoLocation)
+    +getId()
+    +double getValue()
+    +int getSrc()
+    +void setSrc(int)
+    +int getDest()
+    +void setDest(int)
+    +double getSpeed()
+    +GeoLocation getPos()
+    +void setPos(GeoLocation)
+}
+
+class Pokemon
+{
+    -double value
+    -int type
+    -GeoLocation pos
+    -EdgeData edge
+    +Pokemon(double, int, GeoLocation)
+    +double getValue()
+    +int getType()
+    +GeoLocation getPos()
+    +EdgeData getEdge()
+    +void setEdge(EdgeData)
+}
+
+class Game
+{
+    -ArrayList<Pokemon> pokemons
+    -HashMap<Integer, Agent> agents
+    -DirectedWeightedGraphAlgorithms algo
+    -final Client client
+    -boolean stop_the_game
+    +Game(Client)
+    +boolean isStop_the_game()
+    +void setStop_the_game(boolean)
+    +DirectedWeightedGraphAlgorithms getAlgo()
+    +ArrayList<Pokemon> getPokemons()
+    +HashMap<Integer, Agent> getAgents()
+    +void setGraph(String)
+    +Client getClient()
+    +void updateAgent(String)
+    +updatePokemons(String)
+    +EdgeData findEdgeOfPokemon(GeoLocation, int)
+    +Agent chooseAgent(Pokemon)
+    +void planNext()
+}
+
+@enduml
+
+
+
+@enduml

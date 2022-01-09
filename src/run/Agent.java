@@ -28,10 +28,6 @@ public class Agent {
         return value;
     }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
-
     public int getSrc() {
         return src;
     }
@@ -51,8 +47,6 @@ public class Agent {
     public double getSpeed() {
         return speed;
     }
-
-    public void setSpeed(double speed){ this.speed = speed;}
 
     public GeoLocation getPos() {
         return pos;

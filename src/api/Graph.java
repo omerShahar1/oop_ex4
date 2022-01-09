@@ -16,31 +16,6 @@ public class Graph implements DirectedWeightedGraph
     private HashMap<Integer, HashMap<Integer, EdgeData>> inEdges;
     public HashMap<Integer, Integer> changes; //save amount of changes to a specific node outEdges
 
-    public Graph(DirectedWeightedGraph graph)
-    {//copy constructor
-        nodes = new HashMap<>();
-        edges = new HashMap<>();
-        outEdges = new HashMap<>();
-        inEdges = new HashMap<>();
-        changes = new HashMap<>();
-        MC = graph.getMC();
-
-        Iterator<NodeData> iterator1 = graph.nodeIter();
-        while(iterator1.hasNext())
-        {
-            NodeData node = iterator1.next();
-            addNode(node); //create new node from the current node info and add it to the new graph.
-        }
-
-        Iterator<EdgeData> iterator2 = graph.edgeIter();
-        while(iterator2.hasNext())
-        {
-            EdgeData edge = iterator2.next();
-            connect(edge.getSrc(), edge.getDest(), edge.getWeight()); //create new edge from the current edge info and add it to the new graph.
-            changes.put(edge.getSrc(), 0); //new graph, so we will zero the amount of changes.
-        }
-    }
-
 
     public Graph(String jsonStr)
     {//constructor from json file string
@@ -307,29 +282,5 @@ public class Graph implements DirectedWeightedGraph
         {
             iter.forEachRemaining(action);
         }
-    }
-
-    @Override
-    public boolean isOnEdge(EdgeData edge, GeoLocation location, int type) {
-        double p2 = getNode(edge.getDest()).getLocation().y();
-        double p1 = getNode(edge.getSrc()).getLocation().y();
-        if ( ((p2 > p1) && (type > 0)) || ((p2 < p1) && (type < 0)) ) {
-            int dest = edge.getDest();
-            int src = edge.getSrc();
-            double y2 = getNode(dest).getLocation().y();
-            double y1 = getNode(src).getLocation().y();
-            double x2 = getNode(dest).getLocation().x();
-            double x1 = getNode(src).getLocation().x();
-
-            double m = (y2 - y1) / (x2 - x1);
-
-            double left = location.y() - y1;
-            double right = m * (location.x()) - x1;
-
-            return  ((left - 0.01) <= right) && (right <= (left + 0.01));
-        }
-
-        return false;
-
     }
 }

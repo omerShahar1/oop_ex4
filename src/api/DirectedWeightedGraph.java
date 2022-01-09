@@ -91,12 +91,4 @@ public interface DirectedWeightedGraph {
  * @return
  */
 	public int getMC();
-
-	/**
-	 * this function check if the position is on the edge
-	 * @param edge
-	 * @param location
-	 * @return
-	 */
-	public boolean isOnEdge(EdgeData edge, GeoLocation location, int type);
 }
