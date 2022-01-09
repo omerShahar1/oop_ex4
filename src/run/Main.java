@@ -1,17 +1,13 @@
 package run;
 import GUI.Frame;
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 
 public class Main
 {
     public static void main(String[] args)
     {
-
-
             Client client = new Client();
         try {
             client.startConnection("127.0.0.1", 6666);
@@ -20,31 +16,29 @@ public class Main
         }
 
 
-        Game game = new Game(client);
-            game.setGraph(client.getGraph());
-            int firstNode = game.getAlgo().center().getKey();
-            JSONObject info = new JSONObject(client.getInfo());
-            JSONObject amountInfo = info.getJSONObject("GameServer");
-            int amountAgent = amountInfo.getInt("agents");
-            for (int i = 0; i < amountAgent; i++)
-                client.addAgent("{\"id\":" + firstNode + "}");
+        Game game = new Game(client); //new game
+        game.setGraph(client.getGraph()); //set the graph
+        int firstNode = game.getAlgo().center().getKey(); //find the best starting node
+        JSONObject info = new JSONObject(client.getInfo());
+        JSONObject amountInfo = info.getJSONObject("GameServer");
+        int amountAgent = amountInfo.getInt("agents");
+        for (int i = 0; i < amountAgent; i++)
+            client.addAgent("{\"id\":" + firstNode + "}"); //add all the new agents to the client
 
-            //client.login("207689621");
-
-            Frame gameGui = new Frame(game);
-            client.start();
-            long time = 0;
+        Frame gui = new Frame(game); //create the gui
+        client.start(); //start the game
+        long time = 0; //to determine time
 
         try {
             while (client.isRunning().equals("true") && !game.isStop_the_game()) {
                 if (time == 0) {
                     time = Long.parseLong(client.timeToEnd());
                 }
-                if (Long.parseLong(client.timeToEnd()) < time - 150) {
+                if (Long.parseLong(client.timeToEnd()) < time - 100) {
                     time = Long.parseLong(client.timeToEnd());
                     client.move();
                 }
-                gameGui.update(game);
+                gui.update(game);
                 game.updatePokemons(client.getPokemons());
                 game.updateAgent(client.getAgents());
                 game.planNext(); //plan the next moves and change the agents dest ant time values.
@@ -63,7 +57,7 @@ public class Main
         catch (Exception e)
         {
             System.out.println("game over");
-            gameGui.close();
+            gui.close();
         }
     }
 }

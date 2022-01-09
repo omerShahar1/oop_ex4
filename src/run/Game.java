@@ -14,6 +14,10 @@ public class Game
     private final Client client;
     private boolean stop_the_game;
 
+    /**
+     * constructor
+     * @param client the client object we are using for the game
+     */
     public Game(Client client)
     {
         this.algo = null;
@@ -47,12 +51,15 @@ public class Game
         this.algo = new Algo(jsonStr);
     }
 
-
     public Client getClient() {
         return client;
     }
 
 
+    /**
+     * update the list of agents in the game.
+     * @param jsonStr json string represent the new order of our agents
+     */
     public void updateAgent(String jsonStr)
     {
         agents.clear();
@@ -76,6 +83,10 @@ public class Game
     }
 
 
+    /**
+     * update the list of pokemons in the game.
+     * @param jsonStr json string represent the new order of our pokemons
+     */
     public void updatePokemons(String jsonStr)
     {
         pokemons.clear();

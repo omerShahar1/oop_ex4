@@ -5,7 +5,7 @@ import api.GeoLocation;
 
 public class Pokemon
 {
-    private double value;
+    private double value; //points value of the pokemon
     private int type;
     private GeoLocation pos;
     private EdgeData edge;
