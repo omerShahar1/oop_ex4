@@ -30,7 +30,7 @@ public class Frame implements ActionListener
         JSONObject info = new JSONObject(game.getClient().getInfo());
         JSONObject amountInfo = info.getJSONObject("GameServer");
         double score = amountInfo.getDouble("grade");
-        setScoreTime(game.getClient().timeToEnd(), score);
+        set_time_score(game.getClient().timeToEnd(), score);
         frame.setTitle("GUI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.panel = new Panel(game);
@@ -44,7 +44,7 @@ public class Frame implements ActionListener
 
     /**
      * This function update the score and the time of the game
-     * @param game
+     * @param game the Game object we are currently using
      */
     public void update(Game game)
     {
@@ -70,10 +70,10 @@ public class Frame implements ActionListener
 
     /**
      * This function set the score and the time of the game
-     * @param time
-     * @param score
+     * @param time new time before game over
+     * @param score new score of the game
      */
-    public void setScoreTime(String time,double score)
+    public void set_time_score(String time,double score)
     {
         TimeScore = new JPanel();
         TimeScore.setLayout(null);
@@ -90,7 +90,7 @@ public class Frame implements ActionListener
         TimeScore.add(score_label);
         TimeScore.add(time_label);
         TimeScore.setBackground(Color.darkGray);
-        this.setButtonStop();
+        this.set_stop_button();
         frame.add(TimeScore);
     }
 
@@ -99,7 +99,7 @@ public class Frame implements ActionListener
      * This function create the stop button
      * locate it on the frame
      */
-    public void setButtonStop()
+    public void set_stop_button()
     {
         stop_button = new JButton("Stop");
         stop_button.addActionListener(this);
@@ -110,6 +110,9 @@ public class Frame implements ActionListener
         TimeScore.add(stop_button,BorderLayout.AFTER_LINE_ENDS);
     }
 
+    /**
+     * This function close the gui
+     */
     public void close()
     {
         frame.dispose();
@@ -119,7 +122,7 @@ public class Frame implements ActionListener
     /**
      * This function listen to the stop button
      * if the button clicked the game stops
-     * @param e
+     * @param e the action that just took place
      */
     @Override
     public void actionPerformed(ActionEvent e)

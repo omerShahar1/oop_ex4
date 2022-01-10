@@ -32,18 +32,4 @@ class NodeTest {
         n.setLocation(p2);
         assertEquals(n.getLocation().x(),1);
     }
-
-    @Test
-    void getWeight()
-    {
-        assertEquals(n.getWeight(),0);
-    }
-
-    @Test
-    void setWeight()
-    {
-        n.setWeight(2);
-        assertEquals(n.getWeight(),2);
-
-    }
 }

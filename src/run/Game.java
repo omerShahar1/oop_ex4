@@ -8,8 +8,8 @@ import java.util.*;
 
 public class Game
 {
-    private ArrayList<Pokemon> pokemons;
-    private HashMap<Integer, Agent> agents;
+    private final ArrayList<Pokemon> pokemons;
+    private final HashMap<Integer, Agent> agents;
     private Algo algo;
     private final Client client;
     private boolean stop_the_game;
@@ -70,7 +70,6 @@ public class Game
         {
             JSONObject currentAgent = agentsArray.getJSONObject(i).getJSONObject("Agent");
             int id = currentAgent.getInt("id");
-            double value = currentAgent.getDouble("value");
             int src = currentAgent.getInt("src");
             int dest = currentAgent.getInt("dest");
             double speed = currentAgent.getDouble("speed");

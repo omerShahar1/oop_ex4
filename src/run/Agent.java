@@ -4,16 +4,14 @@ import api.*;
 
 public class Agent {
     private final int id;
-    private double value;
     private int src;
     private int dest;
-    private double speed;
+    private final double speed;
     private Location pos;
     private double timeToNext;
 
     public Agent(int id, int src, int dest, double speed, Location pos) {
         this.id = id;
-        this.value = 0;
         this.src = src;
         this.dest = dest;
         this.speed = speed;
@@ -23,23 +21,15 @@ public class Agent {
 
     /**
      * This function return the id of the agent
-     * @return
+     * @return the id
      */
     public int getId() {
         return id;
     }
 
     /**
-     * This function return the value of the agent
-     * @return
-     */
-    public double getValue() {
-        return value;
-    }
-
-    /**
      * This function get the src of the agent
-     * @return
+     * @return the id src node
      */
     public int getSrc() {
         return src;
@@ -47,7 +37,6 @@ public class Agent {
 
     /**
      * This function set the src of the agent
-     * @return
      */
     public void setSrc(int src) {
         this.src = src;
@@ -55,7 +44,7 @@ public class Agent {
 
     /**
      * This function get the dest of the agent
-     * @return
+     * @return the id of the dest node
      */
     public int getDest() {
         return dest;
@@ -63,7 +52,6 @@ public class Agent {
 
     /**
      * This function set the dest of the agent
-     * @return
      */
     public void setDest(int dest) {
         this.dest = dest;
@@ -71,7 +59,7 @@ public class Agent {
 
     /**
      * This function get the speed of the agent
-     * @return
+     * @return the agent speed
      */
     public double getSpeed() {
         return speed;
@@ -79,7 +67,7 @@ public class Agent {
 
     /**
      * This function get the position of the agent
-     * @return
+     * @return the Location object represent the current location in space of the agent
      */
     public Location getPos() {
         return pos;
@@ -87,7 +75,6 @@ public class Agent {
 
     /**
      * This function set the position of the agent
-     * @return
      */
     public void setPos(Location pos) {
         this.pos = pos;
@@ -95,7 +82,7 @@ public class Agent {
 
     /**
      * This function get the timeToNext of the agent
-     * @return
+     * @return the timeToNext value
      */
     public double getTimeToNext() {
         return timeToNext;
@@ -103,7 +90,6 @@ public class Agent {
 
     /**
      * This function set the timeToNext of the agent
-     * @return
      */
     public void setTimeToNext(double timeToNext) {
         this.timeToNext = timeToNext;

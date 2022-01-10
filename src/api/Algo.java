@@ -1,9 +1,6 @@
 package api;
 import java.util.*;
 
-/**
- * This class implements DirectedWeightedGraphAlgorithms interface
- */
 public class Algo
 {
     private Graph graph;
@@ -15,14 +12,13 @@ public class Algo
     }
 
     /**
-     * This function init the graph
-     * @return DirectedWeightedGraph
+     * This function init the algo with a new graph
      */
     public void init(Graph g) {graph = g;}
 
     /**
      * return the graph
-     * @return DirectedWeightedGraph
+     * @return the graph
      */
     public Graph getGraph()
     {
@@ -33,7 +29,7 @@ public class Algo
      * This function return the total weight of the shortest path dist
      * @param src - start node
      * @param dest - end (target) node
-     * @return
+     * @return the weight of the best path
      */
     public double shortestPathDist(int src, int dest)
     {// final complexity is: o(ElogV)
@@ -81,7 +77,7 @@ public class Algo
      * to arrive with the shortest path between to nodes
      * @param src - start node
      * @param dest - end (target) node
-     * @return
+     * @return Node list of the best path
      */
     public LinkedList<Node> shortestPath(int src, int dest)
     {// final complexity is: o(ElogV)
@@ -140,7 +136,7 @@ public class Algo
     /**
      * This function return a node that from him to the farthest node in graph
      * it will be the shortest from all the nodes
-     * @return
+     * @return the chosen Node
      */
     public Node center()
     {

@@ -5,15 +5,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LocationTest {
     Location l = new Location(1,2,3);
-    Location l2 = new Location(2,4,9);
-    Location l3 = new Location(1,4,3);
 
 
     @Test
-    void distance()
+    void x()
     {
-        l.distance(l);
-        assertEquals(l.distance(l2),6.4031242374328485);
-        assertEquals(l.distance(l3),2);
+        assertEquals(l.x(), 1);
+    }
+
+    @Test
+    void y()
+    {
+        assertEquals(l.y(),2);
+    }
+
+    @Test
+    void z()
+    {
+        assertEquals(l.z(),3);
     }
 }

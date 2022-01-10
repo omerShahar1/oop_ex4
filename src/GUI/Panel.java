@@ -33,7 +33,19 @@ public class Panel extends JPanel
     public Panel(Game game)
     {
         this.game = game;
-        scalingsize();
+        xMin = Integer.MAX_VALUE;
+        yMin = Integer.MAX_VALUE;
+        xMax = Integer.MIN_VALUE;
+        yMax = Integer.MIN_VALUE;
+        Iterator<Node> nodeIter = this.game.getAlgo().getGraph().nodeIter();
+        while (nodeIter.hasNext()) //go over all the nodes to check min and max locations.
+        {
+            Node node = nodeIter.next();
+            xMin = Math.min(node.getLocation().x(), xMin);
+            yMin = Math.min(node.getLocation().y(), yMin);
+            xMax = Math.max(node.getLocation().x(), xMax);
+            yMax = Math.max(node.getLocation().y(), yMax);
+        }
         setPreferredSize(new Dimension(900, 600));
         try
         {
@@ -49,29 +61,8 @@ public class Panel extends JPanel
     }
 
     /**
-     * This function calculate the bounds of the nodes
-     */
-    private void scalingsize()
-    {
-        xMin = Integer.MAX_VALUE;
-        yMin = Integer.MAX_VALUE;
-        xMax = Integer.MIN_VALUE;
-        yMax = Integer.MIN_VALUE;
-        Iterator<Node> nodeIter = this.game.getAlgo().getGraph().nodeIter();
-        while (nodeIter.hasNext()) //go over all the nodes to check min and max locations.
-        {
-            Node node = nodeIter.next();
-            xMin = Math.min(node.getLocation().x(), xMin);
-            yMin = Math.min(node.getLocation().y(), yMin);
-            xMax = Math.max(node.getLocation().x(), xMax);
-            yMax = Math.max(node.getLocation().y(), yMax);
-        }
-    }
-
-    /**
-     * This function draw the graph on the panel
-     * it's draw the nodes, edges, pockemons and agents
-     * @param graphics
+     * This function draw the graph and the components on the panel.
+     * it's draw the nodes, edges, pockemons and agents.
      */
     @Override
     public void paint(Graphics graphics)
@@ -83,8 +74,8 @@ public class Panel extends JPanel
         {
             Node node = nodeIter.next();
             graphics.setColor(Color.red);
-            int x = getXScale(node.getLocation());
-            int y = getYScale(node.getLocation());
+            int x = get_x_Scale(node.getLocation());
+            int y = get_y_Scale(node.getLocation());
             graphics.fillOval(x, y, 14, 14);
             graphics.drawString("" + node.getKey(), x, y); //draw the node id above the node
         }
@@ -95,35 +86,34 @@ public class Panel extends JPanel
             Node src = this.game.getAlgo().getGraph().getNode(currEdge.getSrc());
             Node dest = this.game.getAlgo().getGraph().getNode(currEdge.getDest());
             graphics.setColor(Color.BLACK);
-            int x1=getXScale(src.getLocation()) + 7;
-            int x2=getXScale(dest.getLocation()) + 7;
-            int y1=getYScale(src.getLocation()) + 7;
-            int y2=getYScale(dest.getLocation()) + 7;
+            int x1=get_x_Scale(src.getLocation()) + 7;
+            int x2=get_x_Scale(dest.getLocation()) + 7;
+            int y1=get_y_Scale(src.getLocation()) + 7;
+            int y2=get_y_Scale(dest.getLocation()) + 7;
             graphics.drawLine(x1, y1, x2 ,y2);
             drawArrow(graphics2D, x1, y1, x2 ,y2); //draw the edge arrow to point its direction
         }
 
         graphics.setColor(Color.gray);
         for (Agent agent: game.getAgents().values()) //draw agents
-            graphics.drawImage(image_agent, getXScale(agent.getPos()) - 7, getYScale(agent.getPos()) - 7, 30, 30, null);
+            graphics.drawImage(image_agent, get_x_Scale(agent.getPos()) - 7, get_y_Scale(agent.getPos()) - 7, 30, 30, null);
 
         for (Pokemon pokemon: game.getPokemons()) //draw pokemons
         {
             if(pokemon.getType() > 0)
-                graphics.drawImage(image_pok1, getXScale(pokemon.getPos()) - 6, getYScale(pokemon.getPos()) - 6, 30, 30, null);
+                graphics.drawImage(image_pok1, get_x_Scale(pokemon.getPos()) - 6, get_y_Scale(pokemon.getPos()) - 6, 30, 30, null);
             else
-                graphics.drawImage(image_pok2, getXScale(pokemon.getPos()) - 6, getYScale(pokemon.getPos()) - 6, 30, 30, null);
+                graphics.drawImage(image_pok2, get_x_Scale(pokemon.getPos()) - 6, get_y_Scale(pokemon.getPos()) - 6, 30, 30, null);
         }
     }
 
 
     /**
      * this function draw an arrow for a specific edge
-     * @param graphics
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * @param x1 src x of the edge
+     * @param y1 src y of the edge
+     * @param x2 dest x of the edge
+     * @param y2 dest y of the edge
      */
     void drawArrow(Graphics graphics, int x1, int y1, int x2, int y2)
     {
@@ -144,9 +134,9 @@ public class Panel extends JPanel
      * to put in the panel
      *
      * @param loc the location we want to check
-     * @return
+     * @return the correct scale for x in the graph
      */
-    private int getXScale(Location loc)
+    private int get_x_Scale(Location loc)
     {
         return (int)((((loc.x()-xMin)/(xMax-xMin))*getWidth()*0.9)+(0.05*getWidth()));
     }
@@ -156,9 +146,9 @@ public class Panel extends JPanel
      * This function calculate the scale y position for specific node
      * to put in the panel
      * @param loc the location we want to check
-     * @return
+     * @return the correct scale for y in the graph
      */
-    private int getYScale(Location loc)
+    private int get_y_Scale(Location loc)
     {
         return (int)((((loc.y()-yMin)*(getHeight()-100)/(yMax-yMin))*0.9)+(0.05*(this.getHeight()-100)));
     }

@@ -24,33 +24,4 @@ class EdgeTest
     {
         assertEquals(et.getWeight() ,3);
     }
-
-    @Test
-    void getInfo()
-    {
-        assertEquals(et.getInfo() ,"");
-    }
-
-    @Test
-    void setInfo()
-    {
-        et.setInfo("Ex2");
-        assertEquals(et.getInfo() ,"Ex2");
-
-    }
-
-    @Test
-    void getTag()
-    {
-        assertEquals(et.getTag() ,0);
-
-    }
-
-    @Test
-    void setTag()
-    {
-        et.setTag(9);
-        assertEquals(et.getTag() ,9);
-
-    }
 }

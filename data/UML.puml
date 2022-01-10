@@ -77,29 +77,20 @@ class Edge
     -int src
     -int dest
     -double weight
-    -String info
-    -int tag
     +Edge(int, int, double
     +int getSrc()
     +int getDest()
     +double getWeight()
-    +String getInfo()
-    +void setInfo(String s)
-    +int getTag()
-    +void setTag(int t)
 }
 
 class Node
 {
     -int id
-    -double weight
     -Location location
     +Node(int, double, double, double)
     +int getKey()
     +Location getLocation()
     +void setLocation(Location)
-    +double getWeight()
-    +void setWeight(double)
 }
 
 class Location
@@ -110,14 +101,11 @@ class Location
     +double x()
     +double y()
     +double z()
-    +double distance(Location)
-    +String toString()
 }
 
 class Agent
 {
     -int id
-    -double value
     -int src
     -int dest
     -double speed
@@ -125,7 +113,6 @@ class Agent
     -double TimeToNext
     +Agent(int, int, int, double, Location)
     +getId()
-    +double getValue()
     +int getSrc()
     +void setSrc(int)
     +int getDest()
@@ -157,7 +144,7 @@ class Game
     -ArrayList<Pokemon> pokemons
     -HashMap<Integer, Agent> agents
     -Algo algo
-    -final Client client
+    -Client client
     -boolean stop_the_game
     +Game(Client)
     +boolean isStop_the_game()

@@ -76,7 +76,7 @@ public class Graph
 
     /**
      * add a node to the graph
-     * @param n
+     * @param n the new node
      */
     public void addNode(Node n)
     {// hash map complexity of put is o(1) so the toal complexity of adding new node is o(1).
@@ -121,7 +121,7 @@ public class Graph
 
     /**
      * remove the node with the given key (=id)
-     * @param key
+     * @param key the node id we want to remove
      * @return  erased Node
      */
     public Node removeNode(int key)

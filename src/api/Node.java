@@ -6,7 +6,6 @@ package api;
 public class Node
 {
     private final int id;
-    private double weight;
     private Location location;
 
 
@@ -14,7 +13,6 @@ public class Node
     {
         this.id = id;
         location = new Location(x, y, z);
-        weight = 0;
     }
 
     /**
@@ -38,20 +36,5 @@ public class Node
      */
     public void setLocation(Location p) {
         location = new Location(p.x(), p.y(), p.z());
-    }
-
-    /**
-     * get the weight of the current node
-     * @return double
-     */
-    public double getWeight() {
-        return weight;
-    }
-
-    /**
-     * set the weight of the current node
-     */
-    public void setWeight(double weight) {
-        this.weight=weight;
     }
 }

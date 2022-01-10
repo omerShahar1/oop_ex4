@@ -5,19 +5,15 @@ package api;
  */
 public class Edge
 {
-    private int src;
-    private int dest;
-    private double weight;
-    private String info;
-    private int tag;
+    private final int src;
+    private final int dest;
+    private final double weight;
 
     public Edge(int src, int dest, double weight)
     {
         this.src = src;
         this.dest = dest;
         this.weight = weight;
-        this.info = "";
-        this.tag = 0;
     }
 
     /**
@@ -43,37 +39,4 @@ public class Edge
     public double getWeight() {
         return weight;
     }
-
-    /**
-     * get the info of the edge
-     * @return String
-     */
-    public String getInfo() {
-        return info;
-    }
-
-    /**
-     * set the info of the edge
-     * @param s
-     */
-    public void setInfo(String s) {
-        this.info = s;
-    }
-
-    /**
-     * get the tag of the edge
-     * @return int
-     */
-    public int getTag() {
-        return tag;
-    }
-
-    /**
-     * set the tag of the edge
-     * @param t
-     */
-    public void setTag(int t) {
-        this.tag = t;
-    }
-
 }

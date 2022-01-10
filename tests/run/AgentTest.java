@@ -16,12 +16,6 @@ class AgentTest
     }
 
     @Test
-    void getValue()
-    {
-        assertEquals(agent.getValue(), 0);
-    }
-
-    @Test
     void getSrc()
     {
         assertEquals(agent.getSrc(), 0);
