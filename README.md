@@ -26,9 +26,9 @@ then run the main function in the class "Main" or if you preffer, run the "oop_e
 
 
 # graph class:
-* in the graph class we created two constructors (copy constructor and one that build the graph from given json file string).
-* we used hash map to store the nodes information (key is the node id and the value is the nodeData itself).
-* we used hash map to store the Edges information (key is the String made from the edge src id, comma and the edge dest id. The value is the edgeData).
+* in the graph class we created one constructors that build the graph from given json file string.
+* we used hash map to store the nodes information (key is the node id and the value is the Node itself).
+* we used hash map to store the Edges information (key is the String made from the edge src id, comma and the edge dest id. The value is the Edge).
 * integer MC will be use to count changes in the graph.
 * we used hash map inside hash map to store the out edges inforamtion (first key is the src id and the second is the dest id).
 * we used hash map inside hash map to store the in edges inforamtion (first key is the src id and the second is the dest id).
@@ -50,7 +50,7 @@ then we will delete the node from the hash map by using its id number.
 
 
 # Location class
-* GeoLocation implementation for 3 dimension point in space
+* implementation for 3 dimension point in space
 
 
 
@@ -75,23 +75,23 @@ Implements a single pokemon object in the game
 
 ![Screenshot](images/pika.png)
 
-| *our pokemon in type 1* |
+| *our pokemon in positive type* |
 
 
 
 ![Screenshot](images/balbazor.png)
 
-| *our pokemon in type -1* |
+| *our pokemon in negative type* |
 
 
 
 # Game class
-* the game object represent the current game status. the game includes ArrayList of the game pokemon, HashMap of the agents, the Algo object (from the DirectedWeightedGraphAlgorithms interface) , the Client object of the current scenario, a boolean "stop the game" to represent when we pressed the stop button in the gui.
+* the game object represent the current game status. the game includes ArrayList of the game pokemon, HashMap of the agents, the Algo object , the Client object of the current scenario and a boolean "stop the game" to represent when we pressed the stop button in the gui.
 * we have 1 constructor. it recieve the Client object and create a new game with out any pokemons or agents (yet).
 * the function setGraph will recieve a json string, and use the pre-made Algo constructor to create a new Algo and Graph.
 * the function updateAgent recieve json string represent the new order of our agents and update the agents in the game.
 * the function updatePokemons recieve json string represent the new order of our pokemons and update the pokemons in the game.
-* the function findEdgeOfPokemon recieve a pokemon location as GeoLocation object and a pokemon type as integer and return the correct edge from the graph (the edge our pokemon will be on).
+* the function findEdgeOfPokemon recieve a pokemon location as Location object and a pokemon type as integer and return the correct edge from the graph (the edge our pokemon will be on).
 * the function chooseAgent recieve a pokemon object and return for the pokemon, the best agent to assign.
 * the function planNext will plan for the next moves of the agents.
 
@@ -126,4 +126,4 @@ Here is our score table:
 
 ![Screenshot](images/UML.png)
 
-| *our UML. note that all interfaces have exactly the same functions as the implementing classes. A single line represent interface implemention.* |
+| *our UML.* |
