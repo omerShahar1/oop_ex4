@@ -86,7 +86,7 @@ Implements a single pokemon object in the game
 
 
 # Game class
-* the game object represent the current game status. the game includes ArrayList of the game pokemon, HashMap of the agents, the Algo object (from the DirectedWeightedGraphAlgorithms interface) , the Client object of the current scenario and a boolean "stop the game". (all have get functions)
+* the game object represent the current game status. the game includes ArrayList of the game pokemon, HashMap of the agents, the Algo object (from the DirectedWeightedGraphAlgorithms interface) , the Client object of the current scenario, a boolean "stop the game" to represent when we pressed the stop button in the gui.
 * we have 1 constructor. it recieve the Client object and create a new game with out any pokemons or agents (yet).
 * the function setGraph will recieve a json string, and use the pre-made Algo constructor to create a new Algo and Graph.
 * the function updateAgent recieve json string represent the new order of our agents and update the agents in the game.
@@ -105,22 +105,22 @@ Here is our score table:
 
 | Stage | Grade | Moves |  
 | :---: | :---: |:-----:|     
-| 0 | 100 |  295  |
-| 1  | 479 |  592  |
-| 2  | 214 |  250  |
-| 3  | 600 |  592  |
-| 4  | 161 | 295   |
-| 5  | 589 |  593  |
-| 6  | 40 |  295  |
-| 7  | 332 |  591  |
-| 8  | 61 |  295  |
-| 9  | 200 |  588  | 
-| 10  | 50 |  291  |
-| 11  | 981 |  590  |
-| 12  | 40 |  290  |
-| 13  | 200 |  592  |
-| 14  | 90 |  296  |
-| 15 | 180 |  591  |
+| 0 | 100 |  296  |
+| 1  | 521 |  593  |
+| 2  | 242 |  296  |
+| 3  | 511 |  593  |
+| 4  | 220 | 296   |
+| 5  | 813 |  593  |
+| 6  | 40 |  296  |
+| 7  | 387 |  593  |
+| 8  | 73 |  296  |
+| 9  | 469 |  593  | 
+| 10  | 159 |  296  |
+| 11  | 1351 |  593  |
+| 12  | 40 |  296  |
+| 13  | 230 |  593  |
+| 14  | 193 |  296  |
+| 15 | 180 |  593  |
 
 
 
