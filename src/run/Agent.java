@@ -8,16 +8,17 @@ public class Agent {
     private int src;
     private int dest;
     private double speed;
-    private GeoLocation pos;
+    private Location pos;
+    private double timeToNext;
 
-    public Agent(int id, int src, int dest, double speed, GeoLocation pos) {
+    public Agent(int id, int src, int dest, double speed, Location pos) {
         this.id = id;
         this.value = 0;
         this.src = src;
         this.dest = dest;
         this.speed = speed;
         this.pos = pos;
-
+        this.timeToNext = Double.MAX_VALUE;
     }
 
     /**
@@ -80,7 +81,7 @@ public class Agent {
      * This function get the position of the agent
      * @return
      */
-    public GeoLocation getPos() {
+    public Location getPos() {
         return pos;
     }
 
@@ -88,8 +89,24 @@ public class Agent {
      * This function set the position of the agent
      * @return
      */
-    public void setPos(GeoLocation pos) {
+    public void setPos(Location pos) {
         this.pos = pos;
+    }
+
+    /**
+     * This function get the timeToNext of the agent
+     * @return
+     */
+    public double getTimeToNext() {
+        return timeToNext;
+    }
+
+    /**
+     * This function set the timeToNext of the agent
+     * @return
+     */
+    public void setTimeToNext(double timeToNext) {
+        this.timeToNext = timeToNext;
     }
 }
 

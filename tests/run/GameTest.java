@@ -1,7 +1,6 @@
 package run;
 
-import api.Algo;
-import api.EdgeData;
+import api.Edge;
 import api.Location;
 import org.junit.jupiter.api.Test;
 
@@ -72,8 +71,8 @@ class GameTest
         game.setGraph(json);
         Pokemon pokemon1 = new Pokemon(3.0, 1, new Location(35.197656770719604,32.10191878639921,0.0));
         Pokemon pokemon2 = new Pokemon(3.0, -1, new Location(35.197656770719604,32.10191878639921,0.0));
-        EdgeData edge1 = game.findEdgeOfPokemon(pokemon1.getPos(), pokemon1.getType());
-        EdgeData edge2 = game.findEdgeOfPokemon(pokemon2.getPos(), pokemon2.getType());
+        Edge edge1 = game.findEdgeOfPokemon(pokemon1.getPos(), pokemon1.getType());
+        Edge edge2 = game.findEdgeOfPokemon(pokemon2.getPos(), pokemon2.getType());
         assertNotEquals(edge1.getSrc(), edge2.getSrc());
         assertNotEquals(edge1.getDest(), edge2.getDest());
     }

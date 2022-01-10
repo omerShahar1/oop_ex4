@@ -3,7 +3,7 @@ package api;
 /**
  * This class implements EdgeData interface
  */
-public class Edge implements EdgeData
+public class Edge
 {
     private int src;
     private int dest;
@@ -24,7 +24,6 @@ public class Edge implements EdgeData
      * get the id of the node the edge coming from
      * @return int
      */
-    @Override
     public int getSrc() {
         return src;
     }
@@ -33,7 +32,6 @@ public class Edge implements EdgeData
      * get the id of the node the edge go to
      * @return int
      */
-    @Override
     public int getDest() {
         return dest;
     }
@@ -42,7 +40,6 @@ public class Edge implements EdgeData
      * get the weight of the edge
      * @return double
      */
-    @Override
     public double getWeight() {
         return weight;
     }
@@ -51,7 +48,6 @@ public class Edge implements EdgeData
      * get the info of the edge
      * @return String
      */
-    @Override
     public String getInfo() {
         return info;
     }
@@ -60,7 +56,6 @@ public class Edge implements EdgeData
      * set the info of the edge
      * @param s
      */
-    @Override
     public void setInfo(String s) {
         this.info = s;
     }
@@ -69,7 +64,6 @@ public class Edge implements EdgeData
      * get the tag of the edge
      * @return int
      */
-    @Override
     public int getTag() {
         return tag;
     }
@@ -78,7 +72,6 @@ public class Edge implements EdgeData
      * set the tag of the edge
      * @param t
      */
-    @Override
     public void setTag(int t) {
         this.tag = t;
     }

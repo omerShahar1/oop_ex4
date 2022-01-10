@@ -10,9 +10,6 @@ class AdjListNodeTest {
     double w  = 10.3;
 
     AdjListNode a = new AdjListNode(v, w);
-
-//    int getVertex() { return vertex; }
-//    double getWeight() { return weight; }
     @Test
     void getVertex() {
         assertEquals(a.getVertex(), v);

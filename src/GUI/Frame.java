@@ -18,7 +18,7 @@ public class Frame implements ActionListener
     JLabel time_label;
     JLabel score_label;
     JPanel TimeScore;
-    JButton stop;
+    JButton stop_button;
     double Score;
     String Time;
 
@@ -51,15 +51,15 @@ public class Frame implements ActionListener
         JSONObject info = new JSONObject(game.getClient().getInfo());
         JSONObject amountInfo = info.getJSONObject("GameServer");
         Score = amountInfo.getDouble("grade");
-        Time = "" + Long.parseLong(game.getClient().timeToEnd())/1000;
 
-        TimeScore.setBounds(0,0,frame.getWidth(),100);
-        panel.setBounds(0,100,frame.getWidth(),frame.getHeight()-135);
+        Time = "" + Long.parseLong(game.getClient().timeToEnd())/1000; //1 second is 1000 milliseconds
+        TimeScore.setBounds(0,0,frame.getWidth(),70);
+        panel.setBounds(0,70,frame.getWidth(),frame.getHeight()-135);
         if (frame.getWidth() > 900)
         {
             score_label.setLocation((frame.getWidth() / 10) - 20, 20);
             time_label.setLocation((frame.getWidth() / 10) * 4 + 40, 20);
-            stop.setLocation(frame.getWidth() - 150, 20);
+            stop_button.setLocation(frame.getWidth() - 150, 20);
         }
 
         this.score_label.setText("Score :" + Score);
@@ -101,13 +101,13 @@ public class Frame implements ActionListener
      */
     public void setButtonStop()
     {
-        stop = new JButton("Stop");
-        stop.addActionListener(this);
-        stop.setHorizontalTextPosition(JButton.CENTER);
-        stop.setSize(20,20);
-        stop.setForeground(Color.black);
-        stop.setBounds(500,20,100,40);
-        TimeScore.add(stop,BorderLayout.AFTER_LINE_ENDS);
+        stop_button = new JButton("Stop");
+        stop_button.addActionListener(this);
+        stop_button.setHorizontalTextPosition(JButton.CENTER);
+        stop_button.setSize(20,20);
+        stop_button.setForeground(Color.black);
+        stop_button.setBounds(500,20,100,40);
+        TimeScore.add(stop_button,BorderLayout.AFTER_LINE_ENDS);
     }
 
     public void close()
@@ -124,7 +124,7 @@ public class Frame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getSource() == stop)
+        if (e.getSource() == stop_button)
         {
             game.setStop_the_game(true);
             frame.dispose();

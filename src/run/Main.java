@@ -27,14 +27,13 @@ public class Main
 
         Frame gui = new Frame(game); //create the gui
         client.start(); //start the game
-        long time = 0; //to determine time
+        long time = Long.parseLong(client.timeToEnd()); //to determine time
 
         try {
-            while (client.isRunning().equals("true") && !game.isStop_the_game()) {
-                if (time == 0) {
-                    time = Long.parseLong(client.timeToEnd());
-                }
-                if (Long.parseLong(client.timeToEnd()) < time - 100) {
+            while (client.isRunning().equals("true") && !game.isStop_the_game())
+            {
+                if (Long.parseLong(client.timeToEnd()) < time - 100)
+                {
                     time = Long.parseLong(client.timeToEnd());
                     client.move();
                 }

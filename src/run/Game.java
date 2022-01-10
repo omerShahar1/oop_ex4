@@ -10,7 +10,7 @@ public class Game
 {
     private ArrayList<Pokemon> pokemons;
     private HashMap<Integer, Agent> agents;
-    private DirectedWeightedGraphAlgorithms algo;
+    private Algo algo;
     private final Client client;
     private boolean stop_the_game;
 
@@ -35,7 +35,7 @@ public class Game
         this.stop_the_game = stop_the_game;
     }
 
-    public DirectedWeightedGraphAlgorithms getAlgo() {
+    public Algo getAlgo() {
         return algo;
     }
 
@@ -103,7 +103,7 @@ public class Game
             double y = Double.parseDouble(pos[1]);
             double z = Double.parseDouble(pos[2]);
             Pokemon newPokemon = new Pokemon(value, type,  new Location(x,y,z));
-            EdgeData edge = findEdgeOfPokemon(newPokemon.getPos(), newPokemon.getType());
+            Edge edge = findEdgeOfPokemon(newPokemon.getPos(), newPokemon.getType());
             newPokemon.setEdge(edge);
             this.pokemons.add(newPokemon);
         }
@@ -112,21 +112,21 @@ public class Game
 
     /**
      * find the edge for a given pokemon location.
-     * @param pos pokemon location as GeoLocation object
+     * @param pos pokemon location as Location object
      * @param type pokemon type as integer
      * @return the correct edge
      */
-    public EdgeData findEdgeOfPokemon(GeoLocation pos, int type)
+    public Edge findEdgeOfPokemon(Location pos, int type)
     {
-        Iterator<EdgeData> edgesIter = algo.getGraph().edgeIter();
+        Iterator<Edge> edgesIter = algo.getGraph().edgeIter();
         while (edgesIter.hasNext()) //go over all the edges
         {
-            EdgeData edge = edgesIter.next();
+            Edge edge = edgesIter.next();
             if((type < 0 && edge.getSrc() < edge.getDest()) || (type > 0 && edge.getSrc() > edge.getDest())) //if the type doesn't fit the edge then skip it.
                 continue;
 
-            GeoLocation edgeSrc = algo.getGraph().getNode(edge.getSrc()).getLocation();
-            GeoLocation edgeDest = algo.getGraph().getNode(edge.getDest()).getLocation();
+            Location edgeSrc = algo.getGraph().getNode(edge.getSrc()).getLocation();
+            Location edgeDest = algo.getGraph().getNode(edge.getDest()).getLocation();
 
             double distSrcDest = Math.sqrt(Math.pow((edgeSrc.x() - edgeDest.x()), 2) + Math.pow((edgeSrc.y() - edgeDest.y()), 2)); //distance from src to dest
             double distSrcPok = Math.sqrt(Math.pow((edgeSrc.x() - pos.x()), 2) + Math.pow((edgeSrc.y() - pos.y()), 2)); // distance from src to the pokemon
@@ -155,12 +155,14 @@ public class Game
         {
             double weight = algo.shortestPathDist(agent.getSrc(), pokemon.getEdge().getSrc()) + pokemon.getEdge().getWeight();
             double time = weight / agent.getSpeed(); //calculated time (distance/speed = time).
-            if(time < minTime)
+            if(time < minTime && time < agent.getTimeToNext())
             {
                 minTime = time;
                 selectedAgent = agent;
             }
         }
+        if(selectedAgent != null)
+            selectedAgent.setTimeToNext(minTime);
         return selectedAgent;
     }
 
@@ -183,7 +185,7 @@ public class Game
                 continue;
             }
 
-            LinkedList<NodeData> tempPath = algo.shortestPath(agent.getSrc(), pokemon.getEdge().getSrc());
+            LinkedList<Node> tempPath = algo.shortestPath(agent.getSrc(), pokemon.getEdge().getSrc());
             agent.setDest(tempPath.get(1).getKey());
         }
     }

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AlgoTest
 {
-    private static DirectedWeightedGraphAlgorithms algo;
+    private static Algo algo;
 
     @BeforeEach
     void init() throws IOException
@@ -35,9 +35,9 @@ class AlgoTest
     @Test
     void shortestPath()
     {
-        List<NodeData> test1 = algo.shortestPath(0,5);
+        List<Node> test1 = algo.shortestPath(0,5);
         algo.getGraph().connect(0,5,0.0004);
-        List<NodeData> test2 = algo.shortestPath(0,5);
+        List<Node> test2 = algo.shortestPath(0,5);
         assert (test1.size() > test2.size());
         assert (test1.contains(algo.getGraph().getNode(0)) && test1.contains(algo.getGraph().getNode(5)));
         assert (test2.contains(algo.getGraph().getNode(0)) && test2.contains(algo.getGraph().getNode(5)));

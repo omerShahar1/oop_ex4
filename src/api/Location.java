@@ -3,9 +3,11 @@ package api;
 /**
  * This class implements GeoLocation interface
  */
-public class Location implements GeoLocation
+public class Location
 {
-    private double x,y,z;
+    private final double x;
+    private final double y;
+    private final double z;
     public Location(double x, double y, double z)
     {
         this.x=x;
@@ -17,7 +19,6 @@ public class Location implements GeoLocation
      * getters for x value
      * @return double
      */
-    @Override
     public double x() {
         return x;
     }
@@ -26,7 +27,6 @@ public class Location implements GeoLocation
      * getters for y value
      * @return double
      */
-    @Override
     public double y() {
         return y;
     }
@@ -35,18 +35,16 @@ public class Location implements GeoLocation
      * getters for z value
      * @return double
      */
-    @Override
     public double z() {
         return z;
     }
 
     /**
      * This function measures the distance between the current location and a given location
-     * @param location
+     * @param location the location of another point in space
      * @return double
      */
-    @Override
-    public double distance(GeoLocation location)
+    public double distance(Location location)
     {
         double answer = Math.pow(this.x - location.x(), 2); //(x1 - x2)^2
         answer += Math.pow(this.y - location.y(), 2); //(y1 - y2)^2
@@ -57,9 +55,8 @@ public class Location implements GeoLocation
 
     /**
      * This function return a string represent the location
-     * @return
+     * @return string represent
      */
-    @Override
     public String toString()
     {
         return ("" + x + "," + y + "," + z);

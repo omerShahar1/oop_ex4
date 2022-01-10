@@ -1,7 +1,6 @@
 package run;
 
 import api.Edge;
-import api.EdgeData;
 import api.Location;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +34,7 @@ class PokemonTest
     void getEdge()
     {
         assertNull(pokemon.getEdge());
-        EdgeData edge = new Edge(1,2,3.0);
+        Edge edge = new Edge(1,2,3.0);
         pokemon.setEdge(edge);
         assertEquals(pokemon.getEdge(), edge);
     }
@@ -43,7 +42,7 @@ class PokemonTest
     @Test
     void setEdge()
     {
-        EdgeData edge = new Edge(4,33,3.6);
+        Edge edge = new Edge(4,33,3.6);
         pokemon.setEdge(edge);
         assertEquals(pokemon.getEdge(), edge);
     }

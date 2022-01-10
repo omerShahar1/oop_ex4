@@ -1,8 +1,8 @@
 package GUI;
 
-import api.EdgeData;
-import api.GeoLocation;
-import api.NodeData;
+import api.Edge;
+import api.Location;
+import api.Node;
 import run.Agent;
 import run.Game;
 import run.Pokemon;
@@ -21,27 +21,25 @@ import java.util.Iterator;
 public class Panel extends JPanel
 {
     private final Game game;
-    private double xMin;
-    private double yMin;
-    private double xMax;
-    private double yMax;
-    private BufferedImage imageAgent;
-    private BufferedImage imagePok1;
-    private BufferedImage imagePok2;
+    private double xMin; //min x in graph
+    private double yMin; //min y in graph
+    private double xMax; //max x in graph
+    private double yMax; //max y in graph
+    private BufferedImage image_agent; //image to draw the agents
+    private BufferedImage image_pok1; //image to draw pokemon with positive type
+    private BufferedImage image_pok2; //image to draw pokemon with negative type
 
 
     public Panel(Game game)
     {
         this.game = game;
         scalingsize();
-
         setPreferredSize(new Dimension(900, 600));
-
         try
         {
-            imagePok1 = ImageIO.read(new File("images/pika.png"));
-            imagePok2 = ImageIO.read(new File("images/balbazor.png"));
-            imageAgent = ImageIO.read(new File("images/ash.png"));
+            image_pok1 = ImageIO.read(new File("images/pika.png"));
+            image_pok2 = ImageIO.read(new File("images/balbazor.png"));
+            image_agent = ImageIO.read(new File("images/ash.png"));
         }
         catch (IOException ex)
         {
@@ -59,10 +57,10 @@ public class Panel extends JPanel
         yMin = Integer.MAX_VALUE;
         xMax = Integer.MIN_VALUE;
         yMax = Integer.MIN_VALUE;
-        Iterator<NodeData> iterator = this.game.getAlgo().getGraph().nodeIter();
-        while (iterator.hasNext())
+        Iterator<Node> nodeIter = this.game.getAlgo().getGraph().nodeIter();
+        while (nodeIter.hasNext()) //go over all the nodes to check min and max locations.
         {
-            NodeData node = iterator.next();
+            Node node = nodeIter.next();
             xMin = Math.min(node.getLocation().x(), xMin);
             yMin = Math.min(node.getLocation().y(), yMin);
             xMax = Math.max(node.getLocation().x(), xMax);
@@ -70,91 +68,99 @@ public class Panel extends JPanel
         }
     }
 
+    /**
+     * This function draw the graph on the panel
+     * it's draw the nodes, edges, pockemons and agents
+     * @param graphics
+     */
+    @Override
+    public void paint(Graphics graphics)
+    {
+        super.paint(graphics);
+        Graphics2D graphics2D = (Graphics2D) graphics;
+        Iterator<Node> nodeIter = this.game.getAlgo().getGraph().nodeIter();
+        while (nodeIter.hasNext()) //draw nodes
+        {
+            Node node = nodeIter.next();
+            graphics.setColor(Color.red);
+            int x = getXScale(node.getLocation());
+            int y = getYScale(node.getLocation());
+            graphics.fillOval(x, y, 14, 14);
+            graphics.drawString("" + node.getKey(), x, y); //draw the node id above the node
+        }
+        Iterator<Edge> edgeIter = this.game.getAlgo().getGraph().edgeIter();
+        while (edgeIter.hasNext()) //draw the edges
+        {
+            Edge currEdge = edgeIter.next();
+            Node src = this.game.getAlgo().getGraph().getNode(currEdge.getSrc());
+            Node dest = this.game.getAlgo().getGraph().getNode(currEdge.getDest());
+            graphics.setColor(Color.BLACK);
+            int x1=getXScale(src.getLocation()) + 7;
+            int x2=getXScale(dest.getLocation()) + 7;
+            int y1=getYScale(src.getLocation()) + 7;
+            int y2=getYScale(dest.getLocation()) + 7;
+            graphics.drawLine(x1, y1, x2 ,y2);
+            drawArrow(graphics2D, x1, y1, x2 ,y2); //draw the edge arrow to point its direction
+        }
+
+        graphics.setColor(Color.gray);
+        for (Agent agent: game.getAgents().values()) //draw agents
+            graphics.drawImage(image_agent, getXScale(agent.getPos()) - 7, getYScale(agent.getPos()) - 7, 30, 30, null);
+
+        for (Pokemon pokemon: game.getPokemons()) //draw pokemons
+        {
+            if(pokemon.getType() > 0)
+                graphics.drawImage(image_pok1, getXScale(pokemon.getPos()) - 6, getYScale(pokemon.getPos()) - 6, 30, 30, null);
+            else
+                graphics.drawImage(image_pok2, getXScale(pokemon.getPos()) - 6, getYScale(pokemon.getPos()) - 6, 30, 30, null);
+        }
+    }
+
+
+    /**
+     * this function draw an arrow for a specific edge
+     * @param graphics
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    void drawArrow(Graphics graphics, int x1, int y1, int x2, int y2)
+    {
+        Graphics2D graphics2D = (Graphics2D) graphics.create();
+        double distanceX = x2 - x1;
+        double distanceY = y2 - y1;
+        double angle = Math.atan2(distanceY, distanceX);
+        int len = (int) Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        graphics2D.transform(at);
+        graphics2D.fillPolygon(new int[]{len, len - 5, len - 5, len}, new int[]{0, -5, 5, 0}, 4);
+    }
+
 
     /**
      * This function calculate the scale x position for specific node
      * to put in the panel
      *
-     * @param pos
+     * @param loc the location we want to check
      * @return
      */
-    private int getXScale(GeoLocation pos) {
-        return (int) ((((pos.x() - xMin) / (xMax - xMin)) * this.getWidth() * 0.9) + (0.05 * this.getWidth()));
+    private int getXScale(Location loc)
+    {
+        return (int)((((loc.x()-xMin)/(xMax-xMin))*getWidth()*0.9)+(0.05*getWidth()));
     }
 
 
     /**
      * This function calculate the scale y position for specific node
      * to put in the panel
-     * @param pos
+     * @param loc the location we want to check
      * @return
      */
-    private int getYScale(GeoLocation pos) {
-        return (int) ((((pos.y() - yMin) * (this.getHeight() - 100) / (yMax - yMin)) * 0.9) + (0.05 * (this.getHeight() - 100)));
-    }
-
-    /**
-     * This function draw the graph on the panel
-     * it's draw the nodes, edges, pockemons and agents
-     * @param g
-     */
-    @Override
-    public void paint(Graphics g)
+    private int getYScale(Location loc)
     {
-        super.paint(g);
-        Graphics2D g1 = (Graphics2D) g;
-        Iterator<NodeData> nodes = this.game.getAlgo().getGraph().nodeIter();
-        while (nodes.hasNext())
-        {
-            NodeData node = nodes.next();
-            g.setColor(Color.red);
-            g.fillOval(getXScale(node.getLocation()), getYScale(node.getLocation()), 15, 15);
-            g.drawString(node.getKey() + "", getXScale(node.getLocation()), getYScale(node.getLocation()));
-        }
-        Iterator<EdgeData> Edges = this.game.getAlgo().getGraph().edgeIter();
-        while (Edges.hasNext())
-        {
-            EdgeData currEdge = Edges.next();
-            NodeData src = this.game.getAlgo().getGraph().getNode(currEdge.getSrc());
-            NodeData dest = this.game.getAlgo().getGraph().getNode(currEdge.getDest());
-            g.setColor(Color.BLACK);
-            g.drawLine(getXScale(src.getLocation()) + 8, getYScale(src.getLocation()) + 8, getXScale(dest.getLocation()) + 8, getYScale(dest.getLocation()) + 8);
-            drawArrow(g1, getXScale(src.getLocation()) + 8, getYScale(src.getLocation()) + 8, getXScale(dest.getLocation()) + 8, getYScale(dest.getLocation()) + 8);
-        }
-
-        g.setColor(Color.gray);
-        for (Pokemon pokemon: game.getPokemons())
-        {
-            if(pokemon.getType() > 0)
-                g.drawImage(imagePok1, getXScale(pokemon.getPos()) - 8, getYScale(pokemon.getPos()) - 8, 40, 40, null);
-            else
-                g.drawImage(imagePok2, getXScale(pokemon.getPos()) - 8, getYScale(pokemon.getPos()) - 8, 35, 35, null);
-        }
-        for (Agent agent: game.getAgents().values())
-            g.drawImage(imageAgent, getXScale(agent.getPos()) - 8, getYScale(agent.getPos()) - 8, 35, 35, null);
-    }
-
-
-    /**
-     * this function draw an arrow for a specific edge
-     * @param g1
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     */
-    void drawArrow(Graphics g1, int x1, int y1, int x2, int y2)
-    {
-        Graphics2D g = (Graphics2D) g1.create();
-        double dx = x2 - x1, dy = y2 - y1;
-        double angle = Math.atan2(dy, dx);
-        int len = (int) Math.sqrt(dx * dx + dy * dy);
-        AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
-        at.concatenate(AffineTransform.getRotateInstance(angle));
-        g.transform(at);
-
-        g.drawLine(0, 0, len, 0);
-        g.fillPolygon(new int[]{len, len - 5, len - 5, len}, new int[]{0, -5, 5, 0}, 4);
+        return (int)((((loc.y()-yMin)*(getHeight()-100)/(yMax-yMin))*0.9)+(0.05*(this.getHeight()-100)));
     }
 
 

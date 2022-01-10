@@ -130,6 +130,7 @@ class Agent
     -int dest
     -double speed
     -GeoLocation pos
+    -double TimeToNext
     +Agent(int, int, int, double, GeoLocation)
     +getId()
     +double getValue()
@@ -140,7 +141,10 @@ class Agent
     +double getSpeed()
     +GeoLocation getPos()
     +void setPos(GeoLocation)
+    +double getTimeToNext()
+    +void setTimeToNext(double)
 }
+
 
 class Pokemon
 {

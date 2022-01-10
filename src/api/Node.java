@@ -3,11 +3,11 @@ package api;
 /**
  * This class implements NodeData interface
  */
-public class Node implements NodeData
+public class Node
 {
-    private int id;
+    private final int id;
     private double weight;
-    private GeoLocation location;
+    private Location location;
 
 
     public Node(int id, double x, double y, double z)
@@ -21,26 +21,22 @@ public class Node implements NodeData
      * get the key(=id) of the node
      * @return int
      */
-    @Override
     public int getKey() {
         return id;
     }
 
     /**
      * get the location of the current node
-     * @return GeoLocation
+     * @return Location
      */
-    @Override
-    public GeoLocation getLocation() {
+    public Location getLocation() {
         return location;
     }
 
     /**
      * set the location of the current node
-     * @return
      */
-    @Override
-    public void setLocation(GeoLocation p) {
+    public void setLocation(Location p) {
         location = new Location(p.x(), p.y(), p.z());
     }
 
@@ -48,16 +44,13 @@ public class Node implements NodeData
      * get the weight of the current node
      * @return double
      */
-    @Override
     public double getWeight() {
         return weight;
     }
 
     /**
      * set the weight of the current node
-     * @return
      */
-    @Override
     public void setWeight(double weight) {
         this.weight=weight;
     }

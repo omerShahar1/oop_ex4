@@ -25,10 +25,10 @@ class NodeTest {
     @Test
     void setLocation()
     {
-        GeoLocation p = new Location(2,1,1);
+        Location p = new Location(2,1,1);
         n.setLocation(p);
         assertEquals(n.getLocation().x(),2);
-        GeoLocation p2 = new Location(1,1,1);
+        Location p2 = new Location(1,1,1);
         n.setLocation(p2);
         assertEquals(n.getLocation().x(),1);
     }

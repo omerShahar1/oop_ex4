@@ -9,13 +9,13 @@ import java.util.function.Consumer;
 /**
  * This class implements DirectedWeightedGraph interface
  */
-public class Graph implements DirectedWeightedGraph
+public class Graph
 {
-    private HashMap<Integer, NodeData> nodes; //the key is the node id.
-    private HashMap<String, EdgeData> edges; // for example, if src=2 and dest=4 then the key is the string: "2,4"
+    private HashMap<Integer, Node> nodes; //the key is the node id.
+    private HashMap<String, Edge> edges; // for example, if src=2 and dest=4 then the key is the string: "2,4"
     private int MC; //count changes in the graph.
-    private HashMap<Integer, HashMap<Integer, EdgeData>> outEdges;
-    private HashMap<Integer, HashMap<Integer, EdgeData>> inEdges;
+    private HashMap<Integer, HashMap<Integer, Edge>> outEdges;
+    private HashMap<Integer, HashMap<Integer, Edge>> inEdges;
     public HashMap<Integer, Integer> changes; //save amount of changes to a specific node outEdges
 
 
@@ -59,19 +59,17 @@ public class Graph implements DirectedWeightedGraph
     /**
      * get the node by the node_id,
      * @param key - the node_id
-     * @return NodeData, null if none
+     * @return Node, null if none
      */
-    @Override
-    public NodeData getNode(int key) { return nodes.get(key); }
+    public Node getNode(int key) { return nodes.get(key); }
 
     /**
      * get the edge by two nodes represent source and destination
      * @param src - the id of the node the edge coming from
      * @param dest - the id of the node the edge go to
-     * @return EdgeData
+     * @return Edge
      */
-    @Override
-    public EdgeData getEdge(int src, int dest) {
+    public Edge getEdge(int src, int dest) {
         String str = src + "," + dest; //every edge will be saved by string representing the edge src and dest with "," between them.
         return edges.get(str);
     }
@@ -80,8 +78,7 @@ public class Graph implements DirectedWeightedGraph
      * add a node to the graph
      * @param n
      */
-    @Override
-    public void addNode(NodeData n)
+    public void addNode(Node n)
     {// hash map complexity of put is o(1) so the toal complexity of adding new node is o(1).
         nodes.put(n.getKey() , new Node(n.getKey(), n.getLocation().x(), n.getLocation().y(), n.getLocation().z()));
         changes.put(n.getKey(), 0);
@@ -94,7 +91,6 @@ public class Graph implements DirectedWeightedGraph
      * @param dest - the destination of the edge.
      * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
      */
-    @Override
     public void connect(int src, int dest, double w)
     {//hash map complexity of put is o(1) so total complexity would be o(1).
         inEdges.put(dest, new HashMap<>());
@@ -108,20 +104,17 @@ public class Graph implements DirectedWeightedGraph
         MC++;
     }
 
-    @Override
-    public Iterator<NodeData> nodeIter()
+    public Iterator<Node> nodeIter()
     {
         return new NodeIterator();
     }
 
-    @Override
-    public Iterator<EdgeData> edgeIter()
+    public Iterator<Edge> edgeIter()
     {
         return new EdgeIterator();
     }
 
-    @Override
-    public Iterator<EdgeData> edgeIter(int node_id)
+    public Iterator<Edge> edgeIter(int node_id)
     {
         return new SpecificNodesIterator(node_id);
     }
@@ -129,15 +122,14 @@ public class Graph implements DirectedWeightedGraph
     /**
      * remove the node with the given key (=id)
      * @param key
-     * @return  erased NodeData
+     * @return  erased Node
      */
-    @Override
-    public NodeData removeNode(int key)
+    public Node removeNode(int key)
     {
-        Iterator<EdgeData> edgesIter = edgeIter();
+        Iterator<Edge> edgesIter = edgeIter();
         while (edgesIter.hasNext()) //go over all the graph edges. o(E)
         {
-            EdgeData e = edgesIter.next();
+            Edge e = edgesIter.next();
             if (e.getSrc() == key || e.getDest() == key) //check if the edge comes from or to the deleted node, and then remove it.
             {
                 edgesIter.remove();
@@ -153,10 +145,9 @@ public class Graph implements DirectedWeightedGraph
      * remove the edge with the given two id of nodes representing source and destination
      * @param src - the id of the node the edge coming from
      * @param dest - the id of the node the edge go to
-     * @return erased EdgeData
+     * @return erased Edge
      */
-    @Override
-    public EdgeData removeEdge(int src, int dest)
+    public Edge removeEdge(int src, int dest)
     {
         outEdges.get(src).remove(dest);
         inEdges.get(dest).remove(src);
@@ -170,7 +161,6 @@ public class Graph implements DirectedWeightedGraph
      * returns the number of vertices (nodes) in the graph
      * @return int
      */
-    @Override
     public int nodeSize() {
         return nodes.size();
     }
@@ -179,25 +169,23 @@ public class Graph implements DirectedWeightedGraph
      * returns the number of edges in the graph
      * @return int
      */
-    @Override
     public int edgeSize() {
         return edges.size();
     }
 
     /**
      * returns the Mode Count - for testing changes in the graph
-     * @return
+     * @return the mc
      */
-    @Override
     public int getMC() {
         return MC;
     }
 
 
-    private class NodeIterator implements Iterator<NodeData>
+    private class NodeIterator implements Iterator<Node>
     {
         int mc;
-        private final Iterator<NodeData> iter;
+        private final Iterator<Node> iter;
 
         public NodeIterator()
         {
@@ -213,7 +201,7 @@ public class Graph implements DirectedWeightedGraph
                 throw new RuntimeException();
         }
         @Override
-        public NodeData next()
+        public Node next()
         {
             if (mc == getMC())
                 return iter.next();
@@ -232,16 +220,16 @@ public class Graph implements DirectedWeightedGraph
                 throw new RuntimeException();
         }
         @Override
-        public void forEachRemaining(Consumer<? super NodeData> action)
+        public void forEachRemaining(Consumer<? super Node> action)
         {
             iter.forEachRemaining(action);
         }
     }
 
-    private class EdgeIterator implements Iterator<EdgeData>
+    private class EdgeIterator implements Iterator<Edge>
     {
         int mc;
-        private final Iterator<EdgeData> iter;
+        private final Iterator<Edge> iter;
 
         public EdgeIterator()
         {
@@ -257,7 +245,7 @@ public class Graph implements DirectedWeightedGraph
                 throw new RuntimeException();
         }
         @Override
-        public EdgeData next()
+        public Edge next()
         {
             if (mc == getMC())
                 return iter.next();
@@ -277,17 +265,17 @@ public class Graph implements DirectedWeightedGraph
         }
 
         @Override
-        public void forEachRemaining(Consumer<? super EdgeData> action)
+        public void forEachRemaining(Consumer<? super Edge> action)
         {
             iter.forEachRemaining(action);
         }
     }
 
-    private class SpecificNodesIterator implements Iterator<EdgeData>
+    private class SpecificNodesIterator implements Iterator<Edge>
     {
         int mc;
         int id;
-        private final Iterator<EdgeData> iter;
+        private final Iterator<Edge> iter;
 
         public SpecificNodesIterator(int node_id)
         {
@@ -304,7 +292,7 @@ public class Graph implements DirectedWeightedGraph
                 throw new RuntimeException();
         }
         @Override
-        public EdgeData next()
+        public Edge next()
         {
             if (mc == changes.get(id))
                 return iter.next();
@@ -324,7 +312,7 @@ public class Graph implements DirectedWeightedGraph
         }
 
         @Override
-        public void forEachRemaining(Consumer<? super EdgeData> action)
+        public void forEachRemaining(Consumer<? super Edge> action)
         {
             iter.forEachRemaining(action);
         }

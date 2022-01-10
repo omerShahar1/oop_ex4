@@ -4,9 +4,9 @@ import java.util.*;
 /**
  * This class implements DirectedWeightedGraphAlgorithms interface
  */
-public class Algo implements DirectedWeightedGraphAlgorithms
+public class Algo
 {
-    private DirectedWeightedGraph graph;
+    private Graph graph;
 
     public Algo(String jsonString)
     {
@@ -18,15 +18,13 @@ public class Algo implements DirectedWeightedGraphAlgorithms
      * This function init the graph
      * @return DirectedWeightedGraph
      */
-    @Override
-    public void init(DirectedWeightedGraph g) {graph = g;}
+    public void init(Graph g) {graph = g;}
 
     /**
      * return the graph
      * @return DirectedWeightedGraph
      */
-    @Override
-    public DirectedWeightedGraph getGraph()
+    public Graph getGraph()
     {
         return graph;
     }
@@ -37,7 +35,6 @@ public class Algo implements DirectedWeightedGraphAlgorithms
      * @param dest - end (target) node
      * @return
      */
-    @Override
     public double shortestPathDist(int src, int dest)
     {// final complexity is: o(ElogV)
         if(src == dest)
@@ -45,19 +42,19 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         HashMap<Integer, ArrayList<AdjListNode>> ew = new HashMap<>(); //sore for every node (key is node id) the list of adjust nodes
         //in the form of AdjlistNode object (look up in the static class for explanation).
         HashMap<Integer, Double> dist = new HashMap<>(); //store distance from the src to every other node.
-        Iterator<NodeData> nodeIter = graph.nodeIter();
+        Iterator<Node> nodeIter = graph.nodeIter();
         while (nodeIter.hasNext())
         {
-            NodeData node = nodeIter.next();
+            Node node = nodeIter.next();
             dist.put(node.getKey(), Double.MAX_VALUE);
             ew.put(node.getKey(), new ArrayList<>());
         }
         dist.put(src, 0.0);
 
-        Iterator<EdgeData> edgeIter = graph.edgeIter();
+        Iterator<Edge> edgeIter = graph.edgeIter();
         while (edgeIter.hasNext())
         {
-            EdgeData edge = edgeIter.next();
+            Edge edge = edgeIter.next();
             ew.get(edge.getSrc()).add(new AdjListNode(edge.getDest(), edge.getWeight()));
         }
 
@@ -86,25 +83,24 @@ public class Algo implements DirectedWeightedGraphAlgorithms
      * @param dest - end (target) node
      * @return
      */
-    @Override
-    public LinkedList<NodeData> shortestPath(int src, int dest)
+    public LinkedList<Node> shortestPath(int src, int dest)
     {// final complexity is: o(ElogV)
         HashMap<Integer, ArrayList<AdjListNode>> ew = new HashMap<>();
         HashMap<Integer, Double> dist = new HashMap<>();
-        Iterator<NodeData> nodeIter = graph.nodeIter();
+        Iterator<Node> nodeIter = graph.nodeIter();
         HashMap<Integer, Integer> preNode = new HashMap<>();
         while (nodeIter.hasNext())
         {
-            NodeData node = nodeIter.next();
+            Node node = nodeIter.next();
             dist.put(node.getKey(), Double.MAX_VALUE);
             ew.put(node.getKey(), new ArrayList<>());
         }
         dist.put(src, 0.0);
 
-        Iterator<EdgeData> edgeIter = graph.edgeIter();
+        Iterator<Edge> edgeIter = graph.edgeIter();
         while (edgeIter.hasNext())
         {
-            EdgeData edge = edgeIter.next();
+            Edge edge = edgeIter.next();
             ew.get(edge.getSrc()).add(new AdjListNode(edge.getDest(), edge.getWeight()));
         }
 
@@ -127,10 +123,10 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         return null;
     }
 
-    private LinkedList<NodeData> checkPath(HashMap<Integer, Integer> preNode, int src, int dest)
+    private LinkedList<Node> checkPath(HashMap<Integer, Integer> preNode, int src, int dest)
     {//the value of each cell in the hash map is the node id we need to reach before going to the node id represented
         // by its key (therefore we start from the dest id).
-        LinkedList<NodeData> list = new LinkedList<>();
+        LinkedList<Node> list = new LinkedList<>();
         while (dest != src)
         {
             list.addFirst(graph.getNode(dest));
@@ -146,28 +142,27 @@ public class Algo implements DirectedWeightedGraphAlgorithms
      * it will be the shortest from all the nodes
      * @return
      */
-    @Override
-    public NodeData center()
+    public Node center()
     {
         HashMap<Integer, ArrayList<AdjListNode>> ew = new HashMap<>(); //save all the edges weights
 
-        Iterator<NodeData> nodeIter = graph.nodeIter();
+        Iterator<Node> nodeIter = graph.nodeIter();
         while (nodeIter.hasNext())
             ew.put(nodeIter.next().getKey(), new ArrayList<>());
 
-        Iterator<EdgeData> edgeIter = graph.edgeIter();
+        Iterator<Edge> edgeIter = graph.edgeIter();
         while (edgeIter.hasNext())
         {
-            EdgeData edge = edgeIter.next();
+            Edge edge = edgeIter.next();
             ew.get(edge.getSrc()).add(new AdjListNode(edge.getDest(), edge.getWeight()));
         }
 
         int id=0; //represent the center node id.
         double lowestWeight= Double.MAX_VALUE;
-        Iterator<NodeData> nodesIter = graph.nodeIter();
+        Iterator<Node> nodesIter = graph.nodeIter();
         while (nodesIter.hasNext())
         { //go over all the nodes and find the lowest value.
-            NodeData node = nodesIter.next();
+            Node node = nodesIter.next();
             double newWeight = dijkstra(node.getKey(), ew);
             if(newWeight == -1)
                 return null;
@@ -186,10 +181,10 @@ public class Algo implements DirectedWeightedGraphAlgorithms
         // will return the highest result instead of result for a given destination value.
 
         HashMap<Integer, Double> dist = new HashMap<>();
-        Iterator<NodeData> nodeIter = graph.nodeIter();
+        Iterator<Node> nodeIter = graph.nodeIter();
         while (nodeIter.hasNext())
         {
-            NodeData node = nodeIter.next();
+            Node node = nodeIter.next();
             dist.put(node.getKey(), Double.MAX_VALUE);
         }
         dist.put(src, 0.0);

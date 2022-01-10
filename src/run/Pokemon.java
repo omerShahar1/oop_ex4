@@ -1,17 +1,17 @@
 package run;
 
-import api.EdgeData;
-import api.GeoLocation;
+import api.Edge;
+import api.Location;
 
 public class Pokemon
 {
-    private double value; //points value of the pokemon
-    private int type;
-    private GeoLocation pos;
-    private EdgeData edge;
+    private final double value; //points value of the pokemon
+    private final int type;
+    private final Location pos;
+    private Edge edge;
 
 
-    public Pokemon(double value, int type, GeoLocation pos)
+    public Pokemon(double value, int type, Location pos)
     {
         this.value = value;
         this.type = type;
@@ -20,7 +20,7 @@ public class Pokemon
 
     /**
      * This function return the value of the pockemon
-     * @return
+     * @return the value
      */
     public double getValue() {
         return value;
@@ -28,7 +28,7 @@ public class Pokemon
 
     /**
      * This function return the type of the pockemon
-     * @return
+     * @return the type
      */
     public int getType() {
         return type;
@@ -36,25 +36,24 @@ public class Pokemon
 
     /**
      * This function get the position of the pockemon
-     * @return
+     * @return the location
      */
-    public GeoLocation getPos() {
+    public Location getPos() {
         return pos;
     }
 
     /**
      * This function get the edge of the pockemon
-     * @return
+     * @return the edge
      */
-    public EdgeData getEdge() {
+    public Edge getEdge() {
         return edge;
     }
 
     /**
      * This function set the edge of the pockemon
-     * @return
      */
-    public void setEdge(EdgeData edge) {
+    public void setEdge(Edge edge) {
         this.edge = edge;
     }
 
