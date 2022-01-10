@@ -19,12 +19,6 @@ java -jar Ex4_Server_v0.0.jar <enter scenario number>
 ```
 then run the main function in the class "Main" or if you preffer, run the "oop_ex4.jar" we created (both ways will have the same effect)
 
-![Alt Text](images/case_2_video.gif)
-
-
-| *A short video clip of Our gui representation of the pokemon game case 5* |
-
-
 # graph class:
 * in the graph class we created one constructors that build the graph from given json file string.
 * we used hash map to store the nodes information (key is the node id and the value is the Node itself).
