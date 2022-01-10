@@ -126,4 +126,4 @@ Here is our score table:
 
 ![Screenshot](images/UML.png)
 
-| *our UML* |
+| *our UML. note that all interfaces have exactly the same functions as the implementing classes. A single line represent interface implemention.* |
